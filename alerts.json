@@ -1,0 +1,310 @@
+{"alertsList":[
+    {
+    "id":1,
+    "type":"Cyber Crime",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+     },
+     {
+    "id":2,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":3,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":4,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+      {
+    "id":5,
+    "type":"Cyber Crime",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+     },
+     {
+    "id":6,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":7,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":8,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+     {
+    "id":9,
+    "type":"Cyber Crime",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+     },
+     {
+    "id":10,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":11,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":12,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+      {
+    "id":13,
+    "type":"Cyber Crime",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+     },
+     {
+    "id":14,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":15,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":16,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+     {
+    "id":17,
+    "type":"Cyber Crime",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+     },
+     {
+    "id":18,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":19,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":20,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+      {
+    "id":21,
+    "type":"Cyber Crime",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+     },
+     {
+    "id":22,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":23,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":24,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+        {
+    "id":10,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":11,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":12,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+      {
+    "id":13,
+    "type":"Cyber Crime",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+     },
+     {
+    "id":14,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":15,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":16,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+     {
+    "id":17,
+    "type":"Cyber Crime",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+     },
+     {
+    "id":18,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":19,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":20,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+      {
+    "id":21,
+    "type":"Cyber Crime",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+     },
+     {
+    "id":22,
+    "type":"Floods",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+      },
+    {
+    "id":23,
+    "type":"Murder",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    },
+    {
+    "id":24,
+    "type":"Fire Outbreak",
+    "time":"11:30pm",
+    "locale":"Roysambu"
+    }
+    ],
+    "responseGroups":[
+        {"id":1,
+        "region":"Kiambu",
+        "provider":true,
+        "group":false,
+        "name":"DCI Kiambu County",
+        "logo":"../AlatPres//assets//favicon.png"
+      },
+        {"id":2,
+        "region":"Nakuru",
+        "provider":true,
+        "group":false,
+        "name":"DCI Nakuru County",
+        "logo":"../AlatPres//assets//favicon.png"
+      },
+        {"id":3,
+        "region":"Mandera",
+        "provider":true,
+        "group":false,
+        "name":"DCI Mandera County",
+        "logo":"../AlatPres//assets//favicon.png"
+      },
+        {"id":4,
+        "region":"Meru",
+        "provider":true,
+        "group":false,
+        "name":"DCI Meru County",
+        "logo":"../AlatPres//assets//favicon.png"
+      },
+        {"id":5,
+        "region":"Marsabit",
+        "provider":true,
+        "group":false,
+        "name":"DCI Marsabit County",
+        "logo":"../AlatPres//assets//favicon.png"
+      },
+        {"id":6,
+        "region":"Lamu",
+        "provider":true,
+        "group":false,
+        "name":"DCI Lamu County",
+        "logo":"../AlatPres//assets//favicon.png"
+      },
+        {"id":7,
+        "region":"Nairobi",
+        "provider":true,
+        "group":false,
+        "name":"DCI Nairobi County",
+        "logo":"../AlatPres//assets//favicon.png"
+      },
+        {"id":8,
+        "region":"Kisumu",
+        "provider":true,
+        "group":false,
+        "name":"DCI Kisumu County",
+        "logo":"../AlatPres//assets//favicon.png"
+      },
+        {"id":9,
+        "region":"Bungoma",
+        "provider":true,
+        "group":false,
+        "name":"DCI Bungoma County",
+        "logo":"../AlatPres//assets//favicon.png"
+      },
+       {"id":10,
+        "region":"Narok",
+        "provider":true,
+        "group":false,
+        "name":"DCI Narok County",
+        "logo":"../AlatPres//assets//favicon.png"
+      }
+    ]
+    
+}
