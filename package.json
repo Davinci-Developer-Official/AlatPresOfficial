@@ -11,13 +11,13 @@
   "dependencies": {
     "expo": "~47.0.8",
     "expo-status-bar": "~1.4.2",
+    "expo-updates": "~0.15.6",
     "react": "18.1.0",
     "react-hook-form": "^7.40.0",
     "react-native": "0.70.5",
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-radio-buttons-group": "^2.2.11",
-    "tcomb-form-native": "^0.6.20",
-    "expo-updates": "~0.15.6"
+    "tcomb-form-native": "^0.6.20"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

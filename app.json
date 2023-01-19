@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "AlatPres",
-    "slug": "alatpres",
+    "name": "AlatPres Mobile",
+    "slug": "Alatpres-Mobile",
+    "description":"Reliable Public Response Partner",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/favicon.png",
+    "icon": "./assets/logo-remake.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/favicon.png",
+      "image": "./assets/full_logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,11 +19,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.wakieye.alatpres"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo-remake.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.wakieye.alatpres"
@@ -30,11 +32,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "cf52f1f6-288c-4207-be57-bf68796d3471"
-      }
-    },
-    "owner": "wakieye"
+   
   }
 }

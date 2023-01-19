@@ -1,96 +1,25 @@
-import React, { Component ,useState} from 'react'
+import React, { useState} from 'react'
 import { Text, View,StyleSheet, ScrollView,Image, TouchableOpacity } from 'react-native'
 import FontAwsome from '@expo/vector-icons/FontAwesome';
-import img1 from '../assets/favicon.png'
-import images from '../assets/images/Images';
-import { SelectList } from 'react-native-dropdown-select-list';
+import img1 from '../assets/Screenshot from 2022-12-10 19-41-14.png';
 import Packages from './Packages';
 import Fundraiser from './Fundraiser';
 import Reports from './Reports';
 import AlertTracker from './AlertTracker';
+import ResponseHome from './ResponseHome'
 
-const groups=[
-  { id:1,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'Govt org'
- },
-   { id:2,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'NGO org'
- },
-   { id:3,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'Community org'
- },
-   { id:4,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'NGO org'
- },
-   { id:5,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'Govt org'
- },
-   { id:6,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'Community org'
- },
-   { id:7,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'Govt org'
- },
-   { id:8,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'NGO org'
- },
-   { id:9,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'Govt org'
- },
-   { id:10,
-  groupname:'Umoja nyumba kumi Group',
-  memberstotal:22,
-  locale:'Umoja',
-  alerttype:'Fire',
-  branch:'Community org'
- },
-]
 
-export default function CreateAlertForm({setShowMenu,setHideBar,setViewMode,setAlertFeeds}) {
+
+export default function CreateAlertForm({setHeader,setShowMenu,setHideBar,setViewMode,setAlertFeeds}) {
     const [resGroup,setResGroup]=useState(false);
     const [resGroupTrigger,setResGroupTrigger]=useState(true);
     const[packagesTrigger,setPackagesTrigger]=useState(false);
     const [fundraiserTrigger,setFundraiserTrigger]=useState(false);
     const[reportTrigger,setReportTrigger]=useState(false);
     const[trackerTrigger,settrackerTrigger]=useState(false);
+    const[responseChoices,setResponseChoices]=useState(false)
     return (
-      <ScrollView style={styles.container} >
+      <View style={styles.container} >
         <View style={{
           backgroundColor:'red',
           
@@ -104,7 +33,9 @@ export default function CreateAlertForm({setShowMenu,setHideBar,setViewMode,setA
               console.log(`exit side menu`)
               setHideBar(true);
               setViewMode(true);
-              setAlertFeeds(true)
+              setAlertFeeds(true);
+             
+             
              }} style={{
               marginTop:10, 
              }} />
@@ -124,9 +55,9 @@ export default function CreateAlertForm({setShowMenu,setHideBar,setViewMode,setA
             display: 'flex',
             flexDirection:'column'
         }} >
-          <Image source={img1} style={{
-            width:"100%",
-            height:220,
+          <Image source={require('../assets/alatpres_logo.png')} style={{
+            width:'60%',
+            marginLeft:'20%',
             
           }} />
            <Text style={{
@@ -136,12 +67,12 @@ export default function CreateAlertForm({setShowMenu,setHideBar,setViewMode,setA
               fontFamily:'monospace',
               height:40,
               color:'white',
+              marginBottom:5,
             }} > Edit your profile <FontAwsome name="pencil" /> </Text>
           </View>
-          
           {resGroupTrigger&&<TouchableOpacity onPress={()=>{
-            setResGroup(true);
-            setResGroupTrigger(false);
+            setResponseChoices(true)
+            
           }} 
           style={{
             display:'flex',
@@ -163,48 +94,8 @@ export default function CreateAlertForm({setShowMenu,setHideBar,setViewMode,setA
               }} />  Response Groups</Text>
         
           </TouchableOpacity>}
-
-              {resGroup&&(<ScrollView style={{
-              height:180,
-               display:'flex',
-            flexDirection:'column',
-            backgroundColor:'#ACBEA3',
-            marginTop:5,
-            width:'96%',
-            borderRadius:5,
-            marginLeft:'2%',
-            padding:10,
-            textAlign:'center',
-            }} >
-              <FontAwsome name='times' size={20} onPress={()=>{
-                setResGroup(false);
-                setResGroupTrigger(true);
-              }} />
-              <Text style={{
-                backgroundColor:'green',
-                textAlign:'center',
-                padding:2,
-                marginTop:2,
-              }} >Available Response Groups</Text>
-              {groups.map(group=>(
-                <View key={group.id} style={{
-                  display:'flex',
-                  flexDirection:'row',
-                  height:30,
-                  backgroundColor:'white',
-                  marginTop:5,
-                  borderRadius:5,
-                }} >
-                  <Text>{group.groupname} </Text>
-                  <Text>  {group.alerttype} </Text>
-                  <Text>{group.locale} </Text>
-                  <Text>{group.memberstotal} </Text>
-                  <Text>{group.branch}</Text>
-
-                </View>
-              ))}
-              
-            </ScrollView>)}
+           
+             
             <TouchableOpacity style={{
             display:'flex',
             flexDirection:'row',
@@ -338,7 +229,10 @@ export default function CreateAlertForm({setShowMenu,setHideBar,setViewMode,setA
                 textAlign:'center',
                 fontSize:20,
               }}>Alatpres </Text>
-      </ScrollView>
+
+    {responseChoices&&<ResponseHome setResponseChoices={setResponseChoices} setShowMenu={setShowMenu} />}
+
+      </View>
     )
   }
 

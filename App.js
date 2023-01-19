@@ -237,17 +237,20 @@ export default function App() {
 
     ];
     const [single,setSingle]=useState("")
-
+    const[header,setHeader]=useState(true)
   return (
+    
     <View style={styles.container}>
+
+      <StatusBar barStyle = "dark-content" hidden = {false} backgroundColor = "#00BCD4" translucent = {true}/>
       <View style={styles.headbar}></View>
-      <View style={{
-        width:410,
+      {header&&<View style={{
+        width:'100%',
         display:'flex',
         flexDirection:'row',
         height:60,
         justifyContent:'space-evenly',
-        backgroundColor:'darkblue',
+        backgroundColor:'white',
         color:'white'
         
         
@@ -265,21 +268,27 @@ export default function App() {
         setViewMode(false);
         setAlertFeeds(false)
         
-      }} > <FontAwsome size={30} name='bars'   /></Text>)}
+      }} > <FontAwsome size={30} name='bars' style={{
+        marginLeft:'-150px',
+        color:'blue'
+      }}  /></Text>)}
       <Image style={{
-        width:50,
-        height:50,
-       
-        marginTop:5,
-      }} source={img2} />
-      <Text style={styles.standardTextHeader}>AlatPres </Text>
-      <Image style={{
-        width:50,
-        height:50,
+        width:'80%',
+        height:52,
         
+        borderRadius:5,
+        
+
+      }} source={require('../AlatPres/assets/name_alatpre.png')} />
+     
+      <Image style={{
+        width:40,
+        height:40,
+        borderRadius:100,                     
         marginTop:5,
-      }} source={img2}/>
-     </View>
+        marginRight:5,
+      }} source={require('./assets/alatpres_logo.png')}/>
+     </View>}
       {viewMode&&(
         <View  style={{
           backgroundColor:'white',
@@ -490,7 +499,7 @@ export default function App() {
       </ScrollView>)}
         
          
-         {showMenu&&(<SideMenu setShowMenu={setShowMenu} setHideBar={setHideBar} setViewMode={setViewMode} setAlertFeeds={setAlertFeeds} />)}
+         {showMenu&&(<SideMenu setHeader={setHeader} setShowMenu={setShowMenu} setHideBar={setHideBar} setViewMode={setViewMode} setAlertFeeds={setAlertFeeds} />)}
       
        {cyber&&(
       <View style={{
@@ -572,7 +581,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headbar:{
-    width:700,
+    width:'100%',
     height:1,
     backgroundColor:'white',
     color:'black',
@@ -596,7 +605,7 @@ const styles = StyleSheet.create({
   },
   basebody:{
     backgroundColor:'#ACBEA3',
-    width:410,
+    width:'100%',
     height:750,
     marginTop:1,
     flex:4,
@@ -606,8 +615,8 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     backgroundColor:'#ACBEA3',
     marginTop:5,
-    marginLeft:10,
-    width:400,
+    marginLeft:'1%',
+    width:"98%",
     height:50,
     marginBottom:2,
     borderRadius:50,
