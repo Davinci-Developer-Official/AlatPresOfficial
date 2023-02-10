@@ -1834,7 +1834,198 @@ const groups=[
     }
 ]
 
+const groupListing=[
+    {
+        id:1,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    },
+    {
+        id:2,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    },
+    {
+        id:3,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    },
+    {
+        id:4,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    },
+    {
+        id:5,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    },
+    {
+        id:6,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    },
+    {
+        id:7,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    },
+    {
+        id:8,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    },
+    {
+        id:9,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    },
+    {
+        id:10,
+        name:'qwerty',
+        signedUp:false,
+        location:'Kasarani'
+    }
+]
+
+
+const alertTypes =[{key:1,
+    value:'Abstraction Of Justice',
+   },
+   {key:2,
+     value:'Buglary'},
+     {key:3,
+       value:'Child Abuse'},
+       {key:4,
+         value:'Cyber Crime'},
+         {key:5,
+           value:'Demonstrations'},
+           {key:6,
+             value:'Drunk and Disorderly'},
+             {key:7,
+               value:'Drugs Induced crime'},
+               {key:8,
+                 value:'Domestic Violence'},
+                 {key:9,
+                   value:'Enviromental Destruction'},
+                   {key:10,
+                     value:'Fire Outbreak'},
+                     {key:11,
+                       value:'Female genital Mutilation.(FGM)'},
+                       {key:12,
+                         value:'Fraud'},
+                         {key:13,
+                           value:'Floods'},
+                       {key:14,
+                         value:'Gender Violence'},
+                         {key:15,
+                           value:'Illegal Gambling'},
+                           {key:16,
+                             value:'Illict Alcohol Brewing'},
+                             {key:17,
+                               value:'Industrial Incident'},
+                               {key:18,
+                                 value:'Kidnapping'},
+                                 {key:19,
+                                   value:'Murder'},
+                                   {key:20,
+                                     value:'Prostitution'},
+                                     {key:21,
+                                       value:'Public Nudity'},
+                                       {key:22,
+                                         value:'Ponography'},
+                                         {key:23,
+                                           value:'Poaching'},
+                                         {key:24,
+                                           value:'Rape'},
+                                           {key:25,
+                                             value:'Robbery'},
+                                             {key:26,
+                                               value:'Riots'},
+                                                 {key:27,
+                                                   value:'Suspicious Activity'},
+                                                     {key:28,
+                                                       value:'Suspicious person(s)'},
+                                                         {key:29,
+                                                           value:'Terrorists Attack'},
+                                                           {key:30,
+                                                             value:'Vandalism'}]
+
+const responseGroups=[
+    {key:1,
+     value:'Kakamega Fire 07212457273 '
+    },
+    {key:2,
+        value:'Kasarani Women 07223457273 '
+       },
+       {key:3,
+        value:'Kakuzi flood 072989276273 '
+       },
+       {key:4,
+        value:'Odesa abduction 0721390473 '
+       },
+       {key:5,
+        value:'galgalo 0734672323273 '
+       },
+       {key:6,
+        value:'Kaka flare 0732473473 '
+       },
+       {key:8,
+           value:'Karani wrap 04584745273 '
+          },
+          {key:9,
+           value:'Kauzi fileed 07234589373 '
+          },
+          {key:10,
+           value:'Oesa treas 072134565673 '
+          },
+          {key:11,
+           value:'gaalo 07356545773 ',
+          }
+];
+
+const  responseProvider=[
+    {key:1,
+        value:'Kenya Fire Brigade 07212457273 '
+       },
+       {key:2,
+           value:'Kenya Flood Management 07223457273 '
+          },
+          {key:3,
+           value:'Kenya Red Cross 072989276273 '
+          },
+          {key:4,
+           value:'Dci Kenya 0721390473 '
+          },
+          {key:5,
+           value:'St John Ambulance 0734672323273 '
+          },
+          {key:6,
+           value:'Sonko Rescue 0732473473 '
+          },
+          {key:8,
+              value:'Kenya Cyber Security Dept 04584745273 '
+             },
+             {key:9,
+              value:'Kenya State Dept 07234589373 '
+             },
+             {key:10,
+              value:'Kenya Marine 072134565673 '
+             },
+             {key:11,
+              value:'Ntsa Trafic  07356545773 ',
+             }
+]
 
 module.exports={
-    geoData,stats,top,alerts,groups,
+    geoData,stats,top,alerts,groups,groupListing,alertTypes,responseGroups,responseProvider
 }

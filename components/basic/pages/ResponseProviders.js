@@ -7,7 +7,7 @@ import { responseGroups,groups } from '../../../mockData/metrics';
 
 
 
-export default function JoinResponseGroup({renderJoinResponseGroup,setBasicDashboard}){
+export default function ResponseProviders({renderResponseProviders,setBasicDashboard}){
     const [searchInput, setSearchInput] = useState('');
     const[recommended,setRecommended]=useState(true);
     const[renderRecommended,setRenderRecommended]=useState(true);
@@ -15,21 +15,21 @@ export default function JoinResponseGroup({renderJoinResponseGroup,setBasicDashb
     const[renderPopular,setRenderPopular]=useState(false);
     const[joins,setJoin]=useState(false);
     const[newArr,setNewArr]=useState([...groupListing]);
-    const[joinedList,setJoinedList]=useState(false) 
-    const[recommendedList,setRecommendedList]=useState(false)
+    const[subscribedList,setsubscribedList]=useState(false) 
+    const[contactedList,setcontactedList]=useState(false)
     const[mostSearchedL,setMostSearchedList]=useState(false) 
     const[popList,setPopLiist]=useState(true)
     const[mainList,setMainList]=useState(false)
     
     const[exitMain,setExitMain]=useState(false)
-    const[exitJoined,setExitJoined]=useState(false)
-    const[exitRecommended,setExitRecommended]=useState(false)
+    const[exitsubscribed,setExitsubscribed]=useState(false)
+    const[exitcontacted,setExitcontacted]=useState(false)
     const[exitPopular,setExitPopular]=useState(false)
     const[exitMostSearched,setExitMostSearched]=useState(false)
     
     const[carretMain,setCarretMain]=useState(true)
-    const[carretJoined,setCarretJoined]=useState(true)
-    const[carretRecommended,setCarretRecommended]=useState(true)
+    const[carretsubscribed,setCarretsubscribed]=useState(true)
+    const[carretcontacted,setCarretcontacted]=useState(true)
     const[carretPopular,setCarretPopular]=useState(true)
     const[carretMostSearched,setCarretMostSearched]=useState(true)
 
@@ -58,8 +58,7 @@ export default function JoinResponseGroup({renderJoinResponseGroup,setBasicDashb
             
         }} >
         <FontAwsome name="times" size={20} onPress={e=>{
-            e.preventDefault()
-            renderJoinResponseGroup(false)
+           renderResponseProviders(false)
         }} style={{
             marginLeft:10,
             marginTop:'1%',
@@ -78,8 +77,8 @@ export default function JoinResponseGroup({renderJoinResponseGroup,setBasicDashb
               }}
               onPress={()=>{
                   setMainList(true)
-                  setJoinedList(false)
-                  setRecommendedList(false)
+                  setsubscribedList(false)
+                  setcontactedList(false)
                   setPopular(false)
                   setMostSearchedList(false)
                   setCarretMain(false);
@@ -89,7 +88,7 @@ export default function JoinResponseGroup({renderJoinResponseGroup,setBasicDashb
                       paddingTop:12,
                       color:'white',
                       marginLeft:15
-                  }} >Response Groups List</Text>
+                  }} >Response Providers List</Text>
                   {carretMain&&(<FontAwsome name='caret-down' size={20} style={{
                       color:'white',
                       paddingTop:12,
@@ -164,33 +163,33 @@ export default function JoinResponseGroup({renderJoinResponseGroup,setBasicDashb
             justifyContent:'space-between'
         }}
         onPress={()=>{
-            setJoinedList(true)
+            setsubscribedList(true)
             setPopLiist(true)
             setMainList(false)
-            setCarretJoined(false)
-            setExitJoined(true)
+            setCarretsubscribed(false)
+            setExitsubscribed(true)
         }} >
             <Text style={{
                 paddingTop:12,
                 color:'white',
                 marginLeft:15
-            }} >Joined Groups</Text>
-            {carretJoined&&(<FontAwsome name='caret-down' size={20} style={{
+            }} >Provider you Subcribed  to</Text>
+            {carretsubscribed&&(<FontAwsome name='caret-down' size={20} style={{
                 color:'white',
                 paddingTop:12,
                 marginRight:10,
             }} />)}
-            {exitJoined&&(<FontAwsome name='times' size={20} style={{
+            {exitsubscribed&&(<FontAwsome name='times' size={20} style={{
                 color:'white',
                 paddingTop:12,
                 marginRight:10,
             }} onPress={()=>{
-                setJoinedList(false)
-                setCarretJoined(true)
-                setExitJoined(false)
+                setsubscribedList(false)
+                setCarretsubscribed(true)
+                setExitsubscribed(false)
             }} />)}
         </TouchableOpacity>
-        {joinedList&&(
+        {subscribedList&&(
             <ScrollView style={{
             width:'98%',
             marginLeft:'1%',
@@ -227,35 +226,35 @@ export default function JoinResponseGroup({renderJoinResponseGroup,setBasicDashb
             justifyContent:'space-between'
         }}
         onPress={()=>{
-            setRecommendedList(true)
+            setcontactedList(true)
             setMainList(false)
-            setCarretRecommended(false)
-            setExitRecommended(true)
+            setCarretcontacted(false)
+            setExitcontacted(true)
             
         }} >
             <Text style={{
                 paddingTop:12,
                 color:'white',
                 marginLeft:15
-            }} >Recommended Groups</Text>
-            {exitRecommended&&(<FontAwsome name="times" size={20} onPress={e=>{
+            }} >Providers you contacted</Text>
+            {exitcontacted&&(<FontAwsome name="times" size={20} onPress={e=>{
                         e.preventDefault()
-                    setRecommendedList(false)
-                    setExitRecommended(false)
-                    setCarretRecommended(true)
+                    setcontactedList(false)
+                    setExitcontacted(false)
+                    setCarretcontacted(true)
                     }} style={{
                         marginRight:10,
                         marginTop:10,
                         color:'white'
                     }} 
                  />)}
-            {carretRecommended&&(<FontAwsome name='caret-down' size={20} style={{
+            {carretcontacted&&(<FontAwsome name='caret-down' size={20} style={{
                 color:'white',
                 paddingTop:12,
                 marginRight:10,
             }} />)}
         </TouchableOpacity>
-        {recommendedList&&(
+        {contactedList&&(
             <ScrollView style={{
             width:'98%',
             marginLeft:'1%',
@@ -301,7 +300,7 @@ export default function JoinResponseGroup({renderJoinResponseGroup,setBasicDashb
                  paddingTop:12,
                  color:'white',
                  marginLeft:15
-            }} >Most Popular Groups</Text>
+            }} >Most Popular Providers</Text>
             {carretPopular&&(<FontAwsome name='caret-down' size={20} style={{
                 color:'white',
                 paddingTop:12,
@@ -364,7 +363,7 @@ export default function JoinResponseGroup({renderJoinResponseGroup,setBasicDashb
                  paddingTop:12,
                  color:'white',
                  marginLeft:15
-            }} >Most Searched Groups</Text>
+            }} >Most Searched Providers</Text>
            {carretMostSearched&&( <FontAwsome name='caret-down' size={20} style={{
                 color:'white',
                 paddingTop:12,

@@ -7,11 +7,21 @@ import FontAwsome from '@expo/vector-icons/FontAwesome'
 import MapView, { Marker } from "react-native-maps";
 import * as Location from 'expo-location';
 import CreateResponseGroup from "./pages/CreateResponseGroup";
+import JoinResponseGroup from "./pages/JoinResponseGroup";
+import CreateAlertForm from "./pages/CreateAlertForm";
+import ResponseProviders from "./pages/ResponseProviders";
 
-export default function Dashboard(){
+export default function Dashboard({setAccessLocation}){
 //useEffect
 useEffect(()=>{
     userLocation()
+    setAccessLocation(async()=>{
+        let{status}= await Location.requestForegroundPermissionsAsync()  ;
+    if(status !== 'granted'){
+        setPermissionDenied(`Permission to access location was denied`);
+    }
+    
+    });
 },[]);
 //useStates
 const[offlineMsg,showOgglineMsg]=useState(false)
@@ -38,7 +48,9 @@ async function userLocation(){
         latitudeDelta:0,
         longitudeDelta:0.0421,
     })
+    
 }
+
 
 //segment1
 const[segment1,setSegemnt1]=useState(true);
@@ -57,13 +69,13 @@ const[tab1,setTab1]=useState(true);
 const[tab2,setTab2]=useState(true);
 const[tab3,setTab3]=useState(true);
 const [createResponseGroup,renderCreateResponseGroup]=useState(false);
-const [joinResponseGroup,renderoinResponseGroup]=useState(false);
-const [responders,renderResponders]=useState(false);
+const [joinResponseGroup,renderJoinResponseGroup]=useState(false);
+const [responseProviders,renderResponseProviders]=useState(false);
 const [createAlert,renderCreateAlert]=useState(false);
 const [allResponseGroups,renderAllResponseGroups]=useState(false);
 
 //segment 4
-const[segment4,setSegemnt4]=useState(true);
+const[segment4,setSegemnt4]=useState(false);
 const[reportsContainer,setReportsContainer]=useState(true);
 const[showOfficialReports,setShowOfficialReports]=useState(true);
 const[showLocalReports,setShowLocalReports]=useState(true);
@@ -82,12 +94,12 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
             
          }} >
         
-
+         
    
 
         {segment3&&(<View style={{
             
-            backgroundColor:'red',
+            backgroundColor:'white',
             marginTop:5,
             width:'98%',
             marginLeft:'1%'
@@ -112,13 +124,15 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
                         marginLeft:'5%',
                         marginTop:5,
                         marginBottom:5,
-                        borderRadius:20
+                        borderRadius:20,
+                        borderStyle:'solid',
+                        borderWidth:1.5,
                     }} onPress={()=>{
                         renderCreateResponseGroup(true);
                     }} >
                         <Text style={{
                             textAlign:'center',
-                            paddingTop:20,
+                            paddingTop:18,
                         }}>Create Response Group </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
@@ -128,12 +142,16 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
                         marginRight:'5%',
                         marginTop:5,
                         marginBottom:5,
-                        borderRadius:20
-                    }}>
+                        borderRadius:20,
+                        borderStyle:'solid',
+                        borderWidth:1.5,
+                    }} onPress={()=>{
+                        renderJoinResponseGroup(true);
+                    }} >
                         <Text style={{
                             textAlign:'center',
-                            paddingTop:20,
-                        }}>Join Response Group</Text>
+                            paddingTop:12,
+                        }}>View/Join Response Group</Text>
                     </TouchableOpacity>
                 </View>)}
 
@@ -152,11 +170,15 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
                          marginLeft:'5%',
                          marginTop:5,
                          marginBottom:5,
-                         borderRadius:20
+                         borderRadius:20,
+                         borderStyle:'solid',
+                         borderWidth:1.5,
+                    }}  onPress={()=>{
+                        renderCreateAlert(true);
                     }} >
                         <Text style={{
                             textAlign:'center',
-                            paddingTop:20,
+                            paddingTop:18,
                         }} >Create Alert</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
@@ -166,14 +188,18 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
                          marginRight:'5%',
                          marginTop:5,
                          marginBottom:5,
-                         borderRadius:20
-                    }} >
+                         borderRadius:20,
+                         borderStyle:'solid',
+                         borderWidth:1.5,
+                    }} onPress={()=>{
+                        renderResponseProviders(true)
+                    }}>
                         <Text style={{
                          paddingTop:20,
                          textAlign:'center',
                          fontSize:13, 
                             
-                        }} >Response Providers</Text>
+                        }}  >Response Providers</Text>
                     </TouchableOpacity>
                 </View>)}
 
@@ -186,19 +212,124 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
                 }}>
                     <TouchableOpacity style={{
                          backgroundColor:'#1e8ee1',
-                         width:'90%',
-                         marginLeft:'5%',
+                         width:'96%',
+                         marginLeft:'2%',
                          height:50,
                          marginTop:5,
                          marginBottom:5,
-                         borderRadius:20
+                         borderRadius:20,
+                         display:'flex',
+                         flexDirection:'row',
+                        justifyContent:'space-between',
+                        borderStyle:'solid',
+                        borderWidth:1.5,
+
+                    }} onPress={()=>{
+                        setSegemnt4(true);
+                        
                     }} >
                         <Text style={{
                             textAlign:'center',
-                            paddingTop:15
-                        }} >All Response Groups</Text>
+                            paddingTop:15,
+                            paddingLeft:35,
+                        }} >Report</Text>
+                        <FontAwsome name='caret-down' size={30} style={{
+                             paddingTop:10,
+                             paddingRight:15,
+                        }} />
                     </TouchableOpacity>
+                   
+                    
                 </View>)}
+                {segment4&&(
+            <View style={{
+                
+                display:'flex',
+                flexDirection:'column',
+                justifyContent:'space-evenly',
+                backgroundColor:'white',
+               
+                height:120,
+                borderStyle:'solid',
+                borderWidth:1.5,
+                marginBottom:5,
+            }} >
+                <FontAwsome  name='times' size={30} style={{
+                    paddingLeft:10,
+                }}  onPress={()=>{
+                    setSegemnt4(false);
+                    
+                }} />
+                <Text style={{
+                    height:20,
+                    textAlign:'center',
+                   
+                }} >Alerts Reports</Text>
+                {reportsContainer&&(
+                    <View style={{
+                        display:'flex',
+                        flexDirection:'row',
+                        backgroundColor:'white',
+                        height:80,
+                        borderStyle:'solid',
+                        borderWidth:1.5,
+                    }} >
+                           {showOfficialReports&&(
+                    <TouchableOpacity style={{
+                        backgroundColor:'#1e8ee1',
+                        height:65,
+                        marginTop:7.5,
+                        width:'30%',
+                        marginLeft:'3%',
+                        borderRadius:10,
+                        borderStyle:'solid',
+                        borderWidth:1.5,
+                    }} >
+                        <Text style={{
+                            paddingTop:20,
+                            paddingLeft:10,
+                        }} >Official Reports</Text>
+                    </TouchableOpacity>
+                )}
+                {showLocalReports&&(
+                    <TouchableOpacity style={{
+                        backgroundColor:'#1e8ee1',
+                        height:65,
+                        marginTop:7.5,
+                        width:'30%',
+                        marginLeft:'2%',
+                        borderRadius:10,
+                        borderStyle:'solid',
+                        borderWidth:1.5,
+                    }}>
+                        <Text style={{
+                            paddingTop:20,
+                            paddingLeft:10,
+                        }} >Other Reports</Text>
+                    </TouchableOpacity>
+                )}
+                {showGeneratedReports&&(
+                     <TouchableOpacity style={{
+                        backgroundColor:'#1e8ee1',
+                        height:65,
+                        marginTop:7.5,
+                        width:'30%',
+                        marginLeft:'2%',
+                        marginRight:'3%',
+                        borderRadius:10,
+                        borderStyle:'solid',
+                        borderWidth:1.5,
+                     }} >
+                        <Text style={{
+                            paddingTop:20,
+                            paddingLeft:10,
+                        }} >Generate Alert Report</Text>
+                     </TouchableOpacity>
+                )}
+                    </View>
+                )}
+            </View>
+        )}
         </View>)}
 
         {segment2&&(<View style={{
@@ -400,85 +531,12 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
             </View>
         )}
 
-        {segment4&&(
-            <View style={{
-                marginTop:12,
-                display:'flex',
-                flexDirection:'column',
-                justifyContent:'space-evenly',
-                backgroundColor:'white',
-                width:'96%',
-                marginLeft:'2%',
-                height:100,
-                borderStyle:'solid',
-                borderWidth:1.5,
-                marginBottom:5,
-            }} >
-                <Text style={{
-                    height:20,
-                    textAlign:'center',
-                }} >Alerts Reports</Text>
-                {reportsContainer&&(
-                    <View style={{
-                        display:'flex',
-                        flexDirection:'row',
-                        backgroundColor:'white',
-                        height:80,
-                        borderStyle:'solid',
-                        borderWidth:1.5,
-                    }} >
-                           {showOfficialReports&&(
-                    <TouchableOpacity style={{
-                        backgroundColor:'#1e8ee1',
-                        height:65,
-                        marginTop:7.5,
-                        width:'30%',
-                        marginLeft:'3%',
-                        borderRadius:10,
-                    }} >
-                        <Text style={{
-                            paddingTop:20,
-                            paddingLeft:10,
-                        }} >Official Reports</Text>
-                    </TouchableOpacity>
-                )}
-                {showLocalReports&&(
-                    <TouchableOpacity style={{
-                        backgroundColor:'#1e8ee1',
-                        height:65,
-                        marginTop:7.5,
-                        width:'30%',
-                        marginLeft:'2%',
-                        borderRadius:10,
-                    }}>
-                        <Text style={{
-                            paddingTop:20,
-                            paddingLeft:10,
-                        }} >Other Reports</Text>
-                    </TouchableOpacity>
-                )}
-                {showGeneratedReports&&(
-                     <TouchableOpacity style={{
-                        backgroundColor:'#1e8ee1',
-                        height:65,
-                        marginTop:7.5,
-                        width:'30%',
-                        marginLeft:'2%',
-                        marginRight:'3%',
-                        borderRadius:10,
-                     }} >
-                        <Text style={{
-                            paddingTop:20,
-                            paddingLeft:10,
-                        }} >Generate Alert Report</Text>
-                     </TouchableOpacity>
-                )}
-                    </View>
-                )}
-            </View>
-        )}
-
+        
+        {responseProviders&&<ResponseProviders renderResponseProviders={renderResponseProviders} />}
         {createResponseGroup&&<CreateResponseGroup renderCreateResponseGroup={renderCreateResponseGroup} />}
+        {joinResponseGroup&&<JoinResponseGroup renderJoinResponseGroup={renderJoinResponseGroup} />}
+        {createAlert&&(<CreateAlertForm renderCreateAlert={renderCreateAlert} />)}
+
         </ScrollView>
         
         

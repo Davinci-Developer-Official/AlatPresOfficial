@@ -48,16 +48,16 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
     const[dot2,showDot2]=useState(false);
     const[dot3,showDot3]=useState(false);
     const[dot4,showDot4]=useState(false);
+    const[caseShow,setCaseShow]=useState(true)
    
     return(
-        <ScrollView style={{
-            position:'absolute',
-            backgroundColor:'#1e8ee1',
-            height:'100%',
-            width:'100%',
-            
-            
-        }} >
+       <View style={{
+        position:'absolute',
+        height:'100%',
+        width:'100%',
+        backgroundColor:'white'
+       }} >
+
         <FontAwsome name="times" size={20} onPress={e=>{
             e.preventDefault()
             renderCreateResponseGroup(false)
@@ -66,22 +66,42 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
             marginTop:10,
         }} />
 
+        <ScrollView style={{
+            backgroundColor:'white',
+            width:'96%',
+            marginLeft:'2%',
+            borderStyle:'solid',
+            borderColor:'black',
+            borderWidth:1.0,
+            marginTop:10,
+        }} >
+       
+
         <Text style={{
             textAlign:'center',
-            marginTop:12
+            marginTop:12,
+            height:30,
+            backgroundColor:'#1e8ee1',
+            width:'96%',
+            marginLeft:'2%',
+            borderStyle:'solid',
+            borderColor:'black',
+            borderWidth:1.0,
+            paddingTop:6,
         }} >Group Name</Text>
         <TextInput value={formData.groupname} style={{
             backgroundColor:'white',
             width:'96%',
             marginLeft:'2%',
-            borderRadius:25,
+            
             height:40,
-            marginTop:5,
+            
             borderStyle:'solid',
             borderColor:'black',
             borderWidth:1.0,
         }} placeholder='  enter group name' 
         onChange={text=>{
+            
             setFormData({groupname:text});
         }}
         />
@@ -92,19 +112,26 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
             <View style={{
                 display:'flex',
                 flexDirection:'column',
-                
+                borderStyle:'solid',
+                borderColor:'black',
+                borderWidth:1.0,
+                width:'96%',
+                marginTop:5,
+                marginLeft:'2%',
               }}>
             
-            <Text style={{
-            color:'red',
-            marginLeft:'3%',
-            marginTop:'2%'
-            }}>*atleast one member required.Then View members </Text>
+            
            
             <View style={{
                 display:'flex',
                 flexDirection:'row',
-                justifyContent:'space-between'
+                justifyContent:'space-between',
+                
+                backgroundColor:'#1e8ee1',
+                borderStyle:'solid',
+                borderColor:'black',
+                borderWidth:1.0,
+                width:'100%'
             }} >
 
                 
@@ -114,9 +141,9 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
                     setAddedMembers(false);
                 }} style={{
                     backgroundColor:'white',
-                    width:'30%',
+                    width:'35%',
                     height:40,
-                    
+                    marginBottom:'1%',
                     marginTop:'1%',
                     borderRadius:30,
                     display:'flex',
@@ -124,15 +151,16 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
                     borderStyle:'solid',
                     borderColor:'black',
                     borderWidth:1.0,
+                    marginLeft:10
                     
                 }} ><FontAwsome name='plus' size={18} style={{
                     paddingTop:10,
-                    paddingLeft:5
+                    paddingLeft:8
                 }}  />
                     <Text style={{
                          textAlign:'center',
                          paddingTop:10,
-                         paddingLeft:5
+                         paddingLeft:8,
                     }} >Add members</Text>
                 </TouchableOpacity>
                 
@@ -298,27 +326,7 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
         }}
         />
 
-        <Text style={{
-            textAlign:'center',
-            marginTop:12,
-            color:'white'
-        }} >Residence Address</Text>
-
-        <TextInput value={formData.membername} style={{
-            backgroundColor:'white',
-            width:'96%',
-            marginLeft:'2%',
-            borderRadius:25,
-            height:40,
-            marginTop:5,
-            borderStyle:'solid',
-            borderColor:'black',
-            borderWidth:1.0,
-        }} placeholder='  enterresidential address' 
-        onChange={text=>{
-            setFormData({membername:text});
-        }}
-        />
+        
 
         <TouchableOpacity style={{
             backgroundColor:'white',
@@ -345,37 +353,27 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
             </View>
         )}
         
-        <Text style={{
+    
+
+        <Text  style={{
             textAlign:'center',
-            marginTop:12
-        }} >Operating Region</Text>
-        <TextInput value={formData.operatingregion} style={{
-            backgroundColor:'white',
+            marginTop:12,
+            height:30,
+            backgroundColor:'#1e8ee1',
             width:'96%',
             marginLeft:'2%',
-            borderRadius:25,
-            height:40,
-            marginTop:5,
             borderStyle:'solid',
             borderColor:'black',
             borderWidth:1.0,
-        }} placeholder='  enter operating region' 
-        onChange={text=>{
-            setFormData({operatingregion:text});
-        }}
-        />
-
-        <Text style={{
-            textAlign:'center',
-            marginTop:12
+            paddingTop:6,
         }} >Hotline Number</Text>
         <TextInput value={formData.hotlinenumber} style={{
             backgroundColor:'white',
             width:'96%',
             marginLeft:'2%',
-            borderRadius:25,
+            
             height:40,
-            marginTop:5,
+           
             borderStyle:'solid',
             borderColor:'black',
             borderWidth:1.0,
@@ -386,17 +384,25 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
         />
 
         <View>
-            <Text style={{
+            <Text  style={{
             textAlign:'center',
-            marginTop:12
-            }} >group purpose</Text>
+            marginTop:12,
+            height:30,
+            backgroundColor:'#1e8ee1',
+            width:'96%',
+            marginLeft:'2%',
+            borderStyle:'solid',
+            borderColor:'black',
+            borderWidth:1.0,
+            paddingTop:6,
+        }} >group purpose</Text>
             <TextInput  style={{
             backgroundColor:'white',
             width:'96%',
             marginLeft:'2%',
-            borderRadius:5,
+           
             height:150,
-            marginTop:5,
+            
             borderStyle:'solid',
             borderColor:'black',
             borderWidth:1.0,
@@ -412,6 +418,10 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
             width:'96%',
             marginLeft:'2%',
             borderRadius:20,
+            borderStyle:'solid',
+            borderColor:'black',
+            borderWidth:1.0,
+            marginBottom:10,
         }} >
             <Text style={{
                 textAlign:'center',
@@ -435,6 +445,9 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
                         marginRight:'6%',
                         display:"flex",
                         flexDirection:'row',
+                        borderStyle:'solid',
+                        borderColor:'black',
+                        borderWidth:1.0,
                     }} onPress={()=>{
                         showDot1(true);
                         setFormData({
@@ -463,6 +476,9 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
                         marginRight:4,
                         display:"flex",
                         flexDirection:'row',
+                        borderStyle:'solid',
+                        borderColor:'black',
+                        borderWidth:1.0,
                     }} onPress={()=>{
                         showDot2(true);
                         showDot1(false);
@@ -498,6 +514,9 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
                     marginRight:'6%',
                     display:"flex",
                     flexDirection:'row',
+                    borderStyle:'solid',
+                    borderColor:'black',
+                    borderWidth:1.0,
                 }} onPress={()=>{
                         showDot2(false);
                         showDot1(false);
@@ -524,6 +543,9 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
                      marginRight:4,
                      display:"flex",
                      flexDirection:'row',
+                     borderStyle:'solid',
+                    borderColor:'black',
+                    borderWidth:1.0,
                 }} onPress={()=>{
                         showDot2(false);
                         showDot1(false);
@@ -545,9 +567,10 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
               </View>
             )}
         </View>
+        </ScrollView>
 
         <TouchableOpacity style={{
-            backgroundColor:'white',
+            backgroundColor:'#1e8ee1',
             width:'30%',
             height:40,
             marginLeft:"35%",
@@ -567,7 +590,6 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
                 paddingTop:10
             }} >save</Text>
         </TouchableOpacity>
-
-        </ScrollView>
+       </View>
     )
 }
