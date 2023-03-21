@@ -1,6 +1,18 @@
 
 import { useEffect, useState } from "react";
-import { View,ScrollView, TouchableOpacity,Text, Button } from "react-native";
+import {
+     View,ScrollView,
+      TouchableOpacity,
+      Text, 
+      Button,
+    ActivityIndicator,
+    FlatList,
+    SafeAreaView,
+    Image,
+    StatusBar,
+    Switch,
+    BackHandler
+ } from "react-native";
 import {stats,geoData,top,alerts,groups} from "../../mockData/metrics";
 import Mapview from "../Mapview";
 import FontAwsome from '@expo/vector-icons/FontAwesome'
@@ -10,10 +22,61 @@ import CreateResponseGroup from "./pages/CreateResponseGroup";
 import JoinResponseGroup from "./pages/JoinResponseGroup";
 import CreateAlertForm from "./pages/CreateAlertForm";
 import ResponseProviders from "./pages/ResponseProviders";
+import axios from "axios";
+import Sidebar from "./Sidebar";
 
-export default function Dashboard({setAccessLocation}){
+
+
+export default function Dashboard({setAccessLocation,showRegistrationPage,setBasicDashboard}){
+    const[fecthedAlerts,setFetchedAlerts]=useState([])
+    const[isLoading,setIsLoading]=useState(true)
+    async function fetchAlerts(){
+      await axios.get("http://192.168.100.35:3500/alatpres/api/alerts")
+      .then(response=>{setFetchedAlerts(response.data)})
+      .catch(error=>{alert(error)})
+      .finally(()=>{setIsLoading(true)})
+        
+           
+    }
+
+  const[timeOfDay,setTimeOfDay]=useState([])
+  const [ampm,setAmPm]=useState("")
+  const [accurateTime,setAccurateTime]=useState([])
+  const[user,setUser]=useState("Joe")
+  async function timing(){
+    
+    const date = await new Date();
+    const hours = await date.getHours();
+    const minutes= await date.getMinutes()
+    const seconds = await date.getSeconds()
+    const time = `${hours}:${minutes}`
+    setAccurateTime(time)
+    //alert(`${accurateTime}`)
+
+    if (hours < 12) {
+       setTimeOfDay("morning")
+       setAmPm("AM")
+       //alert(`${timeOfDay}`)  
+      } else if (hours >= 12 && hours < 17) {
+       setTimeOfDay("Afternoon")
+       setAmPm("NOON")
+       //alert(`${timeOfDay}`)  
+      } else if(hours >= 17 && hours < 20) {
+        setTimeOfDay("Evening")
+        //alert(`${timeOfDay}`)
+        setAmPm("PM")  
+      }
+      else {
+        setTimeOfDay(Night)
+        setAmPm('PM')
+      }
+    
+  }
+
 //useEffect
 useEffect(()=>{
+    //fetchAlerts()
+    timing()
     userLocation()
     setAccessLocation(async()=>{
         let{status}= await Location.requestForegroundPermissionsAsync()  ;
@@ -35,6 +98,7 @@ const[userRegion,setUserRegion]=useState({
     longitudeDelta:0.0421,
 });
 const[permissionDenied,setPermissionDenied]=useState();
+
 async function userLocation(){
     //alert(`Obtaining you Location, Enable location services if it is off`)
     let{status}= await Location.requestForegroundPermissionsAsync()  ;
@@ -83,13 +147,296 @@ const[showGeneratedReports,setShowGeneratedReports]=useState(true);
 //segment5
 const[segment5,setSegemnt5]=useState(true);
 const[showResponseContacts,setShowResponseContacts]=useState(true)
+const[overView,setOverView]=useState(false);//setable to true
+const[statusBar,setStatusBar]=useState(true)
+const[sidebar,renderSidebar]=useState(false) //change to false
+const[dropU,setDropU]=useState(true)
+const[dropD,setDropD]=useState(false)
+const[notificationArea,setNotificationArea]=useState(false)
+const[bell,setBell]=useState(true)
+const[timesNotification,seTimesNotification]=useState(false)
 
+const[showBars,setShowBars]=useState(true)
+const[closeS,setCloseS]=useState(false)
+
+//switch
+const[drkMode,setDrkMode]=useState(true)
+const[incMode,setIncMode]=useState(true)
+const[sosArea,setSosArea]=useState(true)
+const[SwitchLocation,setSwitchLocation ]=useState(true)
+const[enableDark,setEnableDark]=useState(false)
+const[enableLoc,setEnableLoc]=useState(false)
+const[enableInc,setEnableInc]=useState(false)
+const[enableSOS,setEnableSOS]=useState(false)
+
+function toogleSwitchDrk(){
+    
+   setEnableDark(previousState=>!previousState);
+   
+    
+}
+
+const[]=useState(false)
+function toogleSwitchLLoc(){
+    
+    
+    setEnableLoc(previousState=>!previousState)
+     
+ }
+ function toogleSwitchLInc(){
+    
+    
+    setEnableInc(previousState=>!previousState)
+     
+ }
+ function toogleSwitchSOS(){
+    
+    
+    setEnableSOS(previousState=>!previousState)
+     
+ }
     return(
-       
-       
+        
+       <SafeAreaView>
+        {statusBar&& <StatusBar barStyle="dark-content" hidden={false} backgroundColor="#1e8ee1" translucent={true} />}
+
+        <View  style={{
+          width:'100%',
+          display:'flex',
+          flexDirection:'row',
+          height:60,        
+          backgroundColor:'white',
+          marginTop:'5.8%',
+          textAlign:'center',
+          borderStyle:'solid',
+          borderColor:'black',
+          borderWidth:1.5,
+        }} >
+          <TouchableOpacity style={{
+            width:'5%',
+            backgroundColor:'white',
+            height:57,
+          }} >
+            {showBars&&(<FontAwsome name='bars' style={{
+              marginTop:20,
+              marginLeft:5,
+            }} size={20} onPress={()=>{
+              renderSidebar(true);
+              setCloseS(true)
+              setShowBars(false)
+              setOverView(false)
+              setDropU(false)
+              setDropD(true)
+            }} />)}
+            {closeS&&(<FontAwsome name='times' style={{
+              marginTop:20,
+              marginLeft:5,
+            }} size={20} onPress={()=>{
+              renderSidebar(false);
+              setCloseS(false)
+              setShowBars(true)
+
+            }} />)}
+          </TouchableOpacity>
+           <View style={{
+            width:'78%',
+            height:57,
+           }} >
+            <Image source={require('../../assets/name_alatpre.png')} style={{
+              width:'99.9%',
+              height:57,
+              padding:5,
+            }} />
+           </View>
+           <View style={{
+            width:'10%',
+            backgroundColor:'white',
+            height:57,
+          }} >
+            {dropU&&(<FontAwsome name='angle-up' size={35} style={{
+            paddingTop:10,
+            paddingLeft:10,
+           }} onPress={()=>{
+            setOverView(false)
+            setDropU(false)
+            setDropD(true);
+           }} />)}
+           {dropD&&(<FontAwsome name='angle-down' size={35} style={{
+            paddingTop:10,
+            paddingLeft:10,
+           }} onPress={()=>{
+            setOverView(true)
+            setDropU(true)
+            setDropD(false)
+            renderSidebar(false)
+            setCloseS(false)
+            setShowBars(true)
+           }} />)}
+            
+          </View>
+        {bell&&( <View style={{
+            backgroundColor:"white",
+            width:"10%"
+         }} ><FontAwsome name='bell' size={20} style={{
+            paddingTop:15,
+            paddingLeft:3,
+            color:"#1e8ee1"
+           }} onPress={()=>{
+           setNotificationArea(true)
+           seTimesNotification(true)
+           setBell(false)
+           }} /></View>)}
+           {timesNotification&&( <View style={{
+            backgroundColor:"white",
+            width:"10%"
+         }} ><FontAwsome name='times' size={20} style={{
+            paddingTop:22,
+            paddingLeft:6,
+           }} onPress={()=>{
+           setNotificationArea(false)
+           seTimesNotification(false)
+           setBell(true)
+           }} /></View>)}
+        </View>
+        {overView&&(
+            <View style={{
+                marginBottom:5,
+                backgroundColor:'#1e8ee1', 
+                borderWidth:1.5,
+                borderColor:"white"               
+                
+            }} >
+               
+               <View style={{
+                display:"flex",
+                flexDirection:"row",
+                justifyContent:"space-evenly"
+               }} >
+                {drkMode&&(
+                    <View style={{
+                        display:"flex",
+                        flexDirection:"row",
+                       
+                        marginTop:5,
+                        
+                        
+                        width:"40%",
+                       }} >
+                        <Switch value={enableDark} onValueChange={toogleSwitchDrk} style={{
+                           
+                        }} />
+                        <Text style={{
+                            marginTop:14,
+                            marginLeft:10,
+                            fontSize:15,
+                        }} >Turn on Dark  mode</Text>
+                       </View>
+                )}
+                {SwitchLocation&&(<View style={{
+                display:"flex",
+                flexDirection:"row",
+                marginLeft:"10%",
+                marginTop:5,
+                
+                
+                width:"40%",
+               }} >
+                <Switch value={enableLoc} onValueChange={toogleSwitchLLoc} style={{
+                   
+                }} />
+                <Text style={{
+                    marginTop:14,
+                    marginLeft:10,
+                    fontSize:15,
+                }} >Enable Location</Text>
+               </View>)}
+               </View>
+               
+               <View style={{
+                display:"flex",
+                flexDirection:"row",
+                justifyContent:"space-evenly"
+               }} >
+                {incMode&&(
+                    <View style={{
+                        display:"flex",
+                        flexDirection:"row",
+                       
+                        marginTop:5,
+                        
+                        
+                        width:"40%",
+                       }} >
+                        <Switch value={enableInc} onValueChange={toogleSwitchLInc} style={{
+                           
+                        }} />
+                        <Text style={{
+                            marginTop:14,
+                            marginLeft:10,
+                            fontSize:15,
+                        }} >Enable Incognito Mode</Text>
+                       </View>
+                )}
+                {sosArea&&(<View style={{
+                display:"flex",
+                flexDirection:"row",
+                marginLeft:"10%",
+                marginTop:5,
+                
+                
+                width:"40%",
+               }} >
+                <Switch value={enableSOS} onValueChange={toogleSwitchSOS} style={{
+                   
+                }} />
+                <Text style={{
+                    marginTop:14,
+                    marginLeft:10,
+                    fontSize:15,
+                }} >Send SOS</Text>
+               </View>)}
+               </View>
+
+               <View style={{
+                display:"flex",
+                flexDirection:"row",
+                marginTop:10,
+                marginLeft:"10%",
+                
+                width:"60%",
+               }}>
+               <Text> Create new account ?  <Text style={{
+                color:"white"
+               }} onPress={()=>{
+                showRegistrationPage(true);
+                setBasicDashboard(false);
+                setStatusBar(false);
+            }} >Sign up</Text></Text>
+               </View>
+               <View style={{
+                display:"flex",
+                flexDirection:"row",
+                marginTop:10,
+                marginLeft:"10%",
+                marginBottom:10,
+                width:"60%",
+               }}>
+               <Text> Already have an account ? <Text style={{
+                color:"white"
+               }} >Sign in</Text></Text>
+               </View>
+
+
+              
+            </View>
+        )}
          <ScrollView  style={{
             backgroundColor:'white',
             height:'90%',
+            backgroundColor:"white",
+            borderColor:"#1e8ee1",
+            borderStyle:"solid",
+            borderWidth:1.0
             
             
          }} >
@@ -105,9 +452,31 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
             marginLeft:'1%'
             
         }} >
-                <Text style={{
+               <View style={{
+                display:"flex",
+                flexDirection:'row',
+               
+
+               }} >
+               <Text style={{
+                    backgroundColor:'white',
+                    paddingLeft:"5%",
+                   
+                }} >Good {timeOfDay} {user} </Text>
+              
+                 <Text style={{
                     backgroundColor:'white',
                     textAlign:'center',
+                    paddingLeft:"50%"
+                }} >{accurateTime} {ampm} </Text>
+               </View>
+               <Text style={{
+                    backgroundColor:'#1e8ee1',
+                    textAlign:'center',
+                    borderStyle:'solid',
+                    borderWidth:2,
+                    borderColor:'black',
+
                 }} >Dashboard </Text>
                 {tab1&&(<View style={{
                     backgroundColor:'white',
@@ -372,21 +741,26 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
                     <FontAwsome name='times' size={30} onPress={()=>{
                         setShowAlerts(false);
                     }} />
-                   {alerts.map(alert=>(
-                    <TouchableOpacity key={alert.id} style={{
-                        display:'flex',
-                        flexDirection:'row',
-                        height:30,
-                        backgroundColor:'white',
-                        marginTop:10,
-                        width:'98%',
-                        marginLeft:'1%',  
-                    }} >
-                        <Text>{alert.name}</Text>
-                        <Text>{alert.area}</Text>
-                        <Text>{alert.daterepoted}</Text>
-                    </TouchableOpacity>
-                   ))}
+                  <FlatList 
+                    data={alerts}
+                    keyExtractor={({id},index)=>id}
+                    renderItem={({item})=>(
+                        <View style={{
+                            justifyContent:'space-evenly'
+                        }} >
+                            <Text style={{
+                                backgroundColor:'white',
+                                width:'100%',
+                                height:20,
+                                marginTop:3,
+                                justifyContent:'space-evenly'
+                                
+                            }} >
+                                {item.name},{item.daterepoted}
+                            </Text>
+                        </View>
+                    )}
+                  />
                 </ScrollView>
             )}    
         </View>)}
@@ -506,6 +880,7 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
                         
                     }}
                     >
+                        
                     
                     <Text style={{
                         textAlign:'center',
@@ -531,7 +906,8 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
             </View>
         )}
 
-        
+        {sidebar&&<Sidebar  renderSidebar={renderSidebar}  />}
+
         {responseProviders&&<ResponseProviders renderResponseProviders={renderResponseProviders} />}
         {createResponseGroup&&<CreateResponseGroup renderCreateResponseGroup={renderCreateResponseGroup} />}
         {joinResponseGroup&&<JoinResponseGroup renderJoinResponseGroup={renderJoinResponseGroup} />}
@@ -539,6 +915,7 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
 
         </ScrollView>
         
+        </SafeAreaView>
         
         
     

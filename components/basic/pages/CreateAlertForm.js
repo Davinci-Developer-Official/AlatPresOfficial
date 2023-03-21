@@ -1,18 +1,50 @@
 import{ StyleSheet,View,Text,TextInput,ScrollView,TouchableOpacity,Image, } from 'react-native';
 import FontAwsome from '@expo/vector-icons/FontAwesome';
-import { SelectList } from 'react-native-dropdown-select-list';
+import { SelectList,MultipleSelectList } from 'react-native-dropdown-select-list';
 import { useState } from 'react';
 import { alertTypes,responseProvider,responseGroups } from '../../../mockData/metrics';
-
+import axios from 'axios';
 
 export default function CreateAlertForm({renderCreateAlert}){
-  
-  const[choosenAlert,setChoosenAlert]=useState('')
+
+  const[inpuData,setInputData]=useState({
+    type:"",
+    description:"",
+    responders:"",
+    groups:"", 
+    audio:"",
+    video:"",
+    file:"",
+  })
+  const [response,setResponse]=useState([])
   const[responderList,setResponderList]=useState(false)
   const[groups,setGroups]=useState(true)
   const[responderz,setResponders]=useState(true)
   const[media,showMedia]=useState(false);
   
+
+  const url = 'http://127.0.0.1:3500/alatpres/api/alerts'
+  function postToApi(){
+    const sendData ={
+      type:inpuData.type,
+      description:inpuData.description,
+      responders:inpuData.responders, 
+      audio:inpuData.audio,
+      video:inpuData.video,
+      file:inpuData.file,
+    }
+    
+    //fetch(url,{
+    //  method: 'POST',
+    //  headers: {
+    //    Accept: 'application/json',
+    //    'Content-Type': 'application/json',
+    //  },body:JSON.stringify(sendData)})
+    axios
+    .post("http://192.168.100.35:3500/alatpres/api/alerts",sendData)
+    .then(res=>{setResponse(res)})
+    .catch(error=>{console.info(error)})
+  }
 
 
   const data=[...alertTypes]
@@ -48,6 +80,7 @@ export default function CreateAlertForm({renderCreateAlert}){
 
       <SelectList data={data}
               placeholder=" Choose Alert Type"
+              setSelected={val=>{setInputData({type:val})}}
               boxStyles={{
                 backgroundColor:'white',
                 width:'96%',
@@ -59,6 +92,10 @@ export default function CreateAlertForm({renderCreateAlert}){
                 borderWidth:1.5,
                 backgroundColor:'#1e8ee1'
                 
+              }}
+              save="value"
+              onSelect={()=>{
+                //alert(choosenAlert)
               }}
               
           />
@@ -81,7 +118,7 @@ export default function CreateAlertForm({renderCreateAlert}){
       }} onPress={()=>{
         setResponderList(true)
       }} >
-        <Text>Choose Responder</Text>
+        <Text>Choose Response providers/groups</Text>
         <FontAwsome name='caret-down' size={20} style={{
           marginRight:10
         }} />
@@ -101,8 +138,9 @@ export default function CreateAlertForm({renderCreateAlert}){
           setResponderList(false)
         }} />
           {groups&&(
-             <SelectList data={grp}
+             <MultipleSelectList data={grp}
              placeholder=" Choose Response Group"
+             setSelected={vals=>{setInputData({groups:vals})}}
              boxStyles={{
                backgroundColor:'white',
                width:'96%',
@@ -115,11 +153,16 @@ export default function CreateAlertForm({renderCreateAlert}){
                backgroundColor:'white',
                
              }}
+             save="value"
+             onSelect={()=>{
+              //alert(choosenResponseGroups)
+             }}
              />
           )}
           {responderz&&(
-             <SelectList data={providers}
+             <MultipleSelectList data={providers}
              placeholder=" Choose Responder"
+             setSelected={vals=>{setInputData({responders:vals})}}
              boxStyles={{
                backgroundColor:'white',
                width:'96%',
@@ -131,7 +174,11 @@ export default function CreateAlertForm({renderCreateAlert}){
                borderWidth:1.5,
                backgroundColor:'white',
                marginBottom:5
-             }}             
+             }}  
+             save="value"
+             onSelect={()=>{
+              //alert(choosenResponder)
+             }}           
          />
           )}
         </View>
@@ -164,7 +211,9 @@ export default function CreateAlertForm({renderCreateAlert}){
           borderStyle:'solid',
           borderColor:'black',
           borderWidth:1.5,
-        }} placeholder=" Describe here" />
+        }} placeholder=" Describe here"  onChangeText={val=>{
+          setInputData({description:val})
+        }}  />
       </View>
       
      
@@ -239,8 +288,8 @@ export default function CreateAlertForm({renderCreateAlert}){
             borderColor:'black',
             borderWidth:1.5,
           }} onPress={()=>{
-            renderCreateAlert(false);
-            alert(`Alert sent`)
+            //renderCreateAlert(false);
+            postToApi()
           }}  >
             <Text>Make Alert</Text>
           </TouchableOpacity>

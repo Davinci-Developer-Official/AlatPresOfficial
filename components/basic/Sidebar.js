@@ -1,6 +1,9 @@
-import { useState } from "react";
-import { TouchableOpacity,View,Text,Image,ScrollView } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { TouchableOpacity,View,Text,Image,ScrollView, Switch } from "react-native";
 import FontAwsome  from '@expo/vector-icons/FontAwesome'
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export default function({renderSidebar}){
     const[profile,showProfile]=useState(false);
@@ -12,43 +15,58 @@ export default function({renderSidebar}){
     const [refer,showreferal]=useState(false);
     const[AlatPresCommunity,showAlatPresCommunity]=useState(false);
     
+    const[switchDark,setSwitchDark]=useState(false)
+    const[items,setItems]=useState([])
+    
+    function triggerDarkmode(){
+        setSwitchDark(previousState=>!previousState)
+        
+    }
+    useEffect(()=>{
+        AsyncStorage.setItem("drk",JSON.stringify(switchDark))
+        
+    })
     return(
         <ScrollView style={{
         position:'absolute',
         height:"100%",
-        width:'85%',
+        width:'95%',
         backgroundColor:'white',
         borderStyle:'solid',
-        borderColor:'black',
+        borderColor:'#1e8ee1',
         borderWidth:1.5,
+        zIndex:100
     }} >
        <View style={{
-        marginTop:22.5,
+        marginTop:-5,
         backgroundColor:'white',
         height:50,
         borderStyle:'solid',
-        borderColor:'black',
+        borderColor:'#1e8ee1',
         borderWidth:1.5,
         display:'flex',
         flexDirection:'row',
         justifyContent:'space-between'
         
        }}>
-       <FontAwsome name="times" size={30} style={{
-           paddingTop:10,
-           paddingLeft:12
-        }} onPress={()=>{
-            renderSidebar(false);
-        }} />
-        <Text style={{
-            paddingTop:8,
-            fontSize:30,
-            
-        }} >AlatPres Mobile</Text>
-        <FontAwsome name='gear' size={30} style={{
-            paddingTop:10,
-            paddingRight:12
-        }} />
+        <View style={{
+            display:"flex",
+            flexDirection:"row",
+            width:"50%"
+        }} >
+            <Switch  value={switchDark} onValueChange={triggerDarkmode} />
+            <Text style={{
+               marginTop:13,
+            }} >enable Darkmode</Text>
+        </View>
+       <View style={{
+        backgroundColor:"red",
+        height:'80%',
+        width:"50%",
+        marginTop:"2%"
+       }} >
+        <FontAwsome name='inbox' size={20} />
+       </View>
        </View>
        <View style={{
         width:'100%',
