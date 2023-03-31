@@ -24,6 +24,7 @@ import CreateAlertForm from "./pages/CreateAlertForm";
 import ResponseProviders from "./pages/ResponseProviders";
 import axios from "axios";
 import Sidebar from "./Sidebar";
+import Resgroups from "./pages/Resgroups";
 
 
 
@@ -150,8 +151,8 @@ const[showResponseContacts,setShowResponseContacts]=useState(true)
 const[overView,setOverView]=useState(false);//setable to true
 const[statusBar,setStatusBar]=useState(true)
 const[sidebar,renderSidebar]=useState(false) //change to false
-const[dropU,setDropU]=useState(true)
-const[dropD,setDropD]=useState(false)
+const[dropU,setDropU]=useState(false)
+const[dropD,setDropD]=useState(true)
 const[notificationArea,setNotificationArea]=useState(false)
 const[bell,setBell]=useState(true)
 const[timesNotification,seTimesNotification]=useState(false)
@@ -910,7 +911,7 @@ function toogleSwitchLLoc(){
 
         {responseProviders&&<ResponseProviders renderResponseProviders={renderResponseProviders} />}
         {createResponseGroup&&<CreateResponseGroup renderCreateResponseGroup={renderCreateResponseGroup} />}
-        {joinResponseGroup&&<JoinResponseGroup renderJoinResponseGroup={renderJoinResponseGroup} />}
+        {joinResponseGroup&&(<Resgroups renderJoinResponseGroup={renderJoinResponseGroup}  />)}
         {createAlert&&(<CreateAlertForm renderCreateAlert={renderCreateAlert} />)}
 
         </ScrollView>

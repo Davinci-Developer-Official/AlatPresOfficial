@@ -57,7 +57,7 @@ const top=[
 const alerts=[
     {
         id:1,
-        name:'abduction',
+        name:'rape',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -66,7 +66,7 @@ const alerts=[
     },
     {
         id:2,
-        name:'abduction',
+        name:'floods',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -75,7 +75,7 @@ const alerts=[
     },
     {
         id:3,
-        name:'abduction',
+        name:'robbery',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -84,7 +84,7 @@ const alerts=[
     },
     {
         id:4,
-        name:'abduction',
+        name:'theft',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -93,7 +93,7 @@ const alerts=[
     },
     {
         id:5,
-        name:'abduction',
+        name:'murder',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -102,7 +102,7 @@ const alerts=[
     },
     {
         id:6,
-        name:'abduction',
+        name:'money laundery',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -111,7 +111,7 @@ const alerts=[
     },
     {
         id:7,
-        name:'abduction',
+        name:'hacking',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -119,7 +119,7 @@ const alerts=[
         dscription:'Live witnes John Gacy saw three men abduct a 44 year old man near Thika road Mall,they shoved the man into a blue volkswagen yaris and they took off fast,John reported immediately on Alatpres and got connected to the police who acted on the information and their asking th public to aid in the tracking down of the thugs '
     }, {
         id:8,
-        name:'abduction',
+        name:'sexual harrasment',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -128,7 +128,7 @@ const alerts=[
     },
     {
         id:9,
-        name:'abduction',
+        name:'collapse',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -145,7 +145,7 @@ const alerts=[
     },
     {
         id:11,
-        name:'abduction',
+        name:'nudity',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -154,7 +154,7 @@ const alerts=[
     },
     {
         id:12,
-        name:'abduction',
+        name:'mon injustice',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',
@@ -163,7 +163,7 @@ const alerts=[
     },
     {
         id:13,
-        name:'abduction',
+        name:'serial killer',
         area:'Roysambu',
         timereported:'10:40 am',
         daterepoted:'12-04-2022',

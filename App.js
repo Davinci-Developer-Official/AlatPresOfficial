@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { StyleSheet, Text, View, Image,Switch, TouchableOpacity } from 'react-native';
 import Dashboard from './components/basic/Dashboard'
 import Registration from "./components/basic/Registration"
+import Searchbar from './components/Searchbar'
 
 export default function App() {
   //Sidebar config
@@ -12,8 +13,9 @@ export default function App() {
  
   const[acessLocation,setAccessLocation]=useState();
   //Basic Dashboard config
-  const[basicDashboard,setBasicDashboard]=useState(true);//xhange to true later
-
+  const[basicDashboard,setBasicDashboard]=useState(true);//change to true later
+  /*search area test */
+  const[showSearch,setShowSearch]=useState(false)//default false
   //registration
   const[registrationPage,showRegistrationPage]=useState(false)
   
@@ -25,7 +27,7 @@ export default function App() {
 
     {basicDashboard&&<Dashboard setBasicDashboard={setBasicDashboard} setAccessLocation={setAccessLocation}  showRegistrationPage={showRegistrationPage} />}
    
-    
+    {showSearch&&<Searchbar/>}
    
    </View> 
    
