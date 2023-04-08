@@ -9,22 +9,26 @@ import{
     ScrollView,
     Image,
     Platform,
-    Linking
+    Linking,
+    FlatList
 }from "react-native"
 import Checkbox from 'expo-checkbox';
 import email from "react-native-email"
 import * as SMS from 'expo-sms';
 import { TOA } from "../../mockData/metrics";
 import FontAwsome from '@expo/vector-icons/FontAwesome'
+import countries from '../../mockData/CountryCodes.json'
+import Infoslider from "./pages/Infoslider";
 
-export default function RegistrationOptions({showRegistrationPage,setBasicDashboard}){
+
+export default function RegistrationOptions({showRegistrationPage,setBasicDashboard,setIntro}){
     const[enterUsername,setEnterUsername]=useState(true)
     const[enterEmail,setEnterEmail]=useState(true);
     const[verifyOTP,setVerifyOTP]=useState(false)
     const[tour,setTour]=useState(false); //set false
     const[formData,setFormData]=useState(true) //set true
     const[otpSegment,setOtpSegment]=useState(false)
-    const [choices,setChoices]=useState(true)
+    const [choices,setChoices]=useState(false)
     const[identity,setIdentity]=useState(true)
     const[otpMethod,setOtpMethod]=useState(false)
     const[otpConfirmationArea,setOtpConfirmationArea]=useState(false)
@@ -46,17 +50,36 @@ export default function RegistrationOptions({showRegistrationPage,setBasicDashbo
     const[alertLists,setAlertLists]=useState(false);
 
     const[termsOfAgreement,setTermsOfAgreement]=useState(false);
-    const[]=useState(false);
-    const[]=useState(false);
+    const[phoneRegitration,setPhoneRegistration]=useState(true);
+    const[emailRegistration,setEmailRegistration]=useState(false);
     const[]=useState(false);
     const[]=useState(false);
     const[]=useState(false);
 
+   
+    const[tryAnotherWay,setTryAnotherWay]=useState(false)
+    const[editNumber,setEditNumber]=useState(false)
+   
+    /*April changes*/
+    const[termsArea,setTermArea]=useState(true)
+
+    const[selectCountry,setSelectCountry]=useState(false)
+    const[selectedCountry,setSelectedCountry]=useState('')
+    const[selectedCountryCode,setSelectedCountryCode]=useState("")
+    const[entry,setEntry]=useState({
+        emailaddress:"",
+        phonenumber:""
+    })
+   const [searchString,setSearchString]=useState("");
+   const[ProceedToOtp,setProceedToOtp]=useState(false)
+   const[otpseg,setotpseg]=useState(false)
+
     
     //otp
     const[OTP,setOTP]=useState("");
-    const[enteredOTP,setEnteredOTP]=useState("")
-    const[OTPdirective,setOTPderictive]=useState("")
+    //const[enteredOTP,setEnteredOTP]=useState("")
+    const[smsAvailable,setSmsAvailable]=useState("")
+
     async function generateOTP(){
         let max = 900000;
         let min= 100000;
@@ -66,49 +89,32 @@ export default function RegistrationOptions({showRegistrationPage,setBasicDashbo
        
     }
     
-    async function   sendSms (){
-        await generateOTP();
-        const number= [];
-        const message = `you One time password is ${OTP}`
-        const isAvailable = await SMS.isAvailableAsync()
-
-        //if(isAvailable){
-        //   await  SMS.sendSMSAsync(number,message);
-//
-        //}
-
-    }
-
-    async function  sendEmail(){
-       await generateOTP()
-        const to = data.email;
-        //email(to,{
-        //    
-        //    subject:`One Time Password  ${data.username}`,
-        //    body:`This is a one time password :
-        //    The Password is:  ${OTP}
-//
-        //    to resend it click get OTP Passwoed`
-        //})
-        alert(`${OTP}`)
-    }
-    const[unSelected,setIsUnselected]=useState(false)
-    async function sendOtp(){
-        if(isSms){
-            await sendSms();
-        }else if(isEmail){
-            await sendEmail()
+    async function sendSms(){
+        generateOTP()
+        const number = selectedCountryCode + entry.phonenumber;
+        //alert(number)
+        if(selectedCountryCode.trim().length == 0){
+            alert(`please choose your country of residence`)
         }else{
-            setIsUnselected(true)
-            //alert(`no choice selected`);
+        setPhoneRegistration(false);
+        setotpseg(true)
+        const{result}= await SMS.sendSMSAsync(
+            `0113477249`,
+            `Your activation otp is ${OTP}`
+        )
         }
+        
+        
+
     }
+
+   
      function OTPVerification(){
         let eotp= enteredOTP;
         let gotp= OTP;
         
         
-         if(eotp.trim().length ==0){
+         if(eotp.trim().length == 0){
             alert(`please enter OTP`)
          }else{ 
             //alert(`you are wrong`)
@@ -121,46 +127,256 @@ export default function RegistrationOptions({showRegistrationPage,setBasicDashbo
         }
         
     }
-    const[tryAnotherWay,setTryAnotherWay]=useState(false)
-    const[editNumber,setEditNumber]=useState(false)
+    const confirmSmsAvailable = async()=>{
+        const issmsavailable = await SMS.isAvailableAsync();
+        setSmsAvailable(issmsavailable);
+    }
     useEffect(()=>{
-       // generateOTP()
-    },[])
-    const[termsArea,setTermArea]=useState(true)
+        
+        confirmSmsAvailable()
+     },[])
+
     return(
         <SafeAreaView style={{
             backgroundColor:'white',
             height:"100%",
             
         }} >
+       
         {identity&&(
             <View style={{
                 display:'flex',
                 flexDirection:"row",
-                marginTop:"15%",
+                marginTop:"12%",
                 marginBottom:10,
-                width:"90%",
-                marginLeft:"5%",
+                width:"99%",
+                marginLeft:".5%",
+                backgroundColor:"white",
+                height:50,
+
+                borderStyle:"solid",
+                borderBottomWidth:1.0,
+                borderBottomColor:"#1e8ee1",
             }} >
                 <Image source={require('../../assets/alatpres_logo.png')} style={{
-                    height:60,
-                    width:60,
-                    marginLeft:"30%",
+                    height:50,
+                    width:50,
+                    marginLeft:"1%",
                     borderRadius:60,
                     borderStyle:"solid",
                     borderWidth:1.0,
                    
+                   
                 }} />
                 <Text style={{
-                    marginLeft:1,
-                    marginTop:12,
-                    fontSize:35,
-                    fontWeight:"200",
-                    fontStyle:"italic",
-                    color:"#1e8ee1"
-                }} >AlatPres </Text>
+                    color:"#1e8ee1",
+                    marginTop:30,
+                    marginLeft:20,
+                }} >confrim your Phone Number {smsAvailable?<Text>via sms</Text>:""}</Text>
+
+                <FontAwsome name="info" size={30} style={{
+                    marginLeft:70,
+                    marginTop:15,
+                    color:"#1e8ee1",
+                }} onPress={()=>{
+                    showRegistrationPage(false)
+                    setIntro(true)
+                }} />
+               
             </View>
         )}
+        {phoneRegitration&&(
+            <View>
+                <View style={{
+                    width:"90%",
+                    marginLeft:"5%",
+                    marginTop:20,
+                    display:"flex",
+                    flexDirection:"column",
+                }} >
+               
+                
+                    <View style={{
+                        
+                    }} >
+                        <Text>Countries</Text>
+                       <View style={{
+                        display:"flex",
+                        flexDirection:"row"
+                       }} >
+                       <TextInput placeholder="search for our country"
+                        value={!selectedCountry?searchString:selectedCountry}
+                        style={{
+                            borderBottomWidth:1,
+                            paddingLeft:10,
+                            width:"80%",
+                            borderBottomColor:"#1e8ee1",
+                            
+                        }} onChangeText={(text)=>{
+                            
+                            setSearchString(text)
+                        }} onTouchStart={()=>{
+                            setSelectCountry(true)
+                            
+                            
+                        }} />
+                        <FontAwsome name="eraser"  size={20} onPress={()=>{
+                            setSelectedCountry("")
+                        }} style={selectedCountry?{
+                            color:"black",
+                        }:{
+                            color:"#1e8ee1",
+                        }} />
+                       </View>
+                       
+                    {selectCountry&&(<ScrollView 
+                    style={{
+                        marginTop:5,
+                        borderWidth:1,
+                        width:"100%",
+                        height:250,
+
+                        borderColor:"#1e8ee1"
+                    }}
+                    >
+                            {countries
+                            .filter(item=>{
+                                let searchTerm = searchString.toLowerCase();
+                                let comparison = item.name.toLowerCase();
+
+                                return searchTerm ? comparison.startsWith(searchTerm) && searchTerm !== comparison : comparison ;
+                            })
+                            .map(item=>(
+                                <TouchableOpacity style={{
+                                    display:"flex",
+                                    flexDirection:"row",
+                                    backgroundColor:"#1e8ee1",
+                                    marginTop:5,
+                                    width:"90%",
+                                    marginLeft:"5%",
+                                    justifyContent:"space-evenly",
+                                    borderColor:"#1e8ee1",
+                                    borderWidth:1,
+
+                                }} 
+                                onPress={()=>{
+                                    setSelectedCountry(item.name );
+                                    setSelectedCountryCode(item.dial_code)
+                                    setSelectCountry(false)
+                                    
+                                }} 
+                                key={item.name}  >
+                                    
+                                    <Text style={{
+                                        color:"white",
+                                    }} >{item.name}</Text>
+                                    <Text style={{
+                                        color:"white",
+                                    }} >({item.dial_code})</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>)}
+                    </View>
+                
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row",
+                    width:"100%",
+                   
+                }} >
+                
+                <TextInput  placeholder="eg +254"
+                editable={false}
+                value={selectedCountryCode} 
+                style={{
+                    width:"20%",
+                    borderBottomWidth:2,
+                    borderBottomColor:"#1e8ee1",
+                    padding:10,
+                    color:"black"
+                }}  />
+                <TextInput placeholder="      Phone number"
+                style={{
+                    borderBottomWidth:2,
+                    borderBottomColor:"#1e8ee1",
+                    paddingLeft:10,
+                    width:"80%",
+                    height:50,
+                    marginLeft:5,
+                }}  
+                value={entry.phonenumber} 
+                maxLength={9}
+                onChangeText={text=>{
+                    setEntry({phonenumber:text})
+                    if(entry.phonenumber.length >= 8){
+                       setProceedToOtp(true)
+                       
+                    }
+                }}
+                />
+                </View>
+                
+                {ProceedToOtp&&<TouchableOpacity style={{
+                    backgroundColor:"#1e8ee1",
+                    marginTop:"50%",
+                    width:100,
+                    height:50,
+                    marginLeft:"85%",
+                    borderRadius:100,
+                    borderWidth:1,
+
+                }} onPress={()=>{sendSms()}} >
+                    <Text style={{
+                        textAlign:"center",
+                        paddingTop:10,
+                        color:"white"
+                    }} >
+                        <FontAwsome name="arrow-right" size={30} />
+                    </Text>
+                </TouchableOpacity>}
+                </View>
+            </View>
+        )}
+
+      {otpseg&&(
+        <View>
+            <FontAwsome name="arrow-left" size={20} style={{
+                color:"#1e8ee1",
+                marginLeft:7
+            }} onPress={()=>{
+                setPhoneRegistration(true);
+                setotpseg(false);
+            }} />
+            <View style={{
+                marginTop:"20%",
+                width:"90%",
+                marginLeft:"5%"
+
+            }} >
+                <Text style={{
+                    color:"#1e8ee1",
+                }} >code</Text>
+                <TextInput placeholder=" enter the activation code here"
+                style={{
+                    borderBottomWidth:1,
+                    marginTop:5,
+                    borderBottomColor:"#1e8ee1",
+                }}  />
+                <Text  style={{
+                    marginTop:10,
+                    color:"#1e8ee1"
+                }}>We have sent an SMS with OTP activation code to your phone {selectedCountryCode}{entry.phonenumber} </Text>
+            </View>
+
+            <Text style={{
+                marginTop:"100%",
+                color:"red",
+                marginLeft:5,
+            }} >Didn't get code?</Text>
+        </View>
+      )}
+
+
         {choices&&(
             <View style={{
                     marginTop:2,

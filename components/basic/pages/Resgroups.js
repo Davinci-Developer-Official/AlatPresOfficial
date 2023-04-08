@@ -29,9 +29,10 @@ export default function Resgroups({renderJoinResponseGroup,}){
         socket.emit("statusgroups",false)
         setTimeout(()=>{
             renderJoinResponseGroup(false)
-            setresgroups(false)
+            setresgroups(false);
+            console.log(msg)
           
-        },2000)
+        },900)
     }
 
     useEffect(()=>{

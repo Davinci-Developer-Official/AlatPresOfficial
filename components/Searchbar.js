@@ -28,11 +28,12 @@ export default function Searchbar (props){
     const[showoptions,setshowoptions]=useState(false);
     const[data,setData]=useState([])
     
-    const[fetchs ,setFetchs]=useState([])
+    
 
     //fetch resgroups
    async function fetchResgroup (){
         //axios
+
             const response= await fetch(`${baseUrl}/api/resgroup`,
             {
                 method:'GET',
@@ -42,12 +43,14 @@ export default function Searchbar (props){
             })
             const data = await response.json();
             setFetchs(JSON.stringify(data));
-            //alert(fetchs)
+            fetchedGroups.push(data);
+            //alert(fetchedGroups)
+
 
             //
             //.then(res=>{res.data})
             //.then(results=>{setFetchs(results)});
-            fetchedGroups.push(fetchs)
+            
 /*replace axios if  needed */  //fetch(`${baseUrl}/api/resgroup`)
 /*replace axios if  needed */  //.then(response=>response.json())
 /*replace axios if  needed */  //.then(responseJson=>{
@@ -98,6 +101,8 @@ export default function Searchbar (props){
             setalertsrender(true);
         }
     }
+   
+    const[fetchs ,setFetchs]=useState([]) 
     const fetchedGroups =[];
 
     useEffect(()=>{
@@ -119,11 +124,14 @@ export default function Searchbar (props){
         if(resgroup === true ){
            setTimeout(() => {
             fetchResgroup();
+            //axios.get(baseUrl).then((response) => {
+            //    setFetchs(response.data);
+            //});
             console.log(`response:=>${fetchs}`);
             //alert(fetchedGroups);
-            fetchedGroups.push([...fetchs])
-           // alert(fetchedGroups);
-           },200);
+            //fetchedGroups.push([...fetchs])
+            alert(fetchs);
+           },20);
            
             
             
@@ -139,6 +147,8 @@ export default function Searchbar (props){
       
         
     },[])
+
+    
     return(
     
    <SafeAreaView style={{

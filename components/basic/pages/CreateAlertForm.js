@@ -10,12 +10,14 @@ export default function CreateAlertForm({renderCreateAlert}){
   const[inpuData,setInputData]=useState({
     type:"",
     description:"",
-    responders:"",
-    groups:"", 
+    responders:responseproviders,
+    groups:responsegroups, 
     audio:"",
     video:"",
     file:"",
   })
+  const [ responsegroups,setresponsegroups]=useState([])
+  const  [responseproviders,setresponseproviders]=useState([])
   const [response,setResponse]=useState([])
   const[responderList,setResponderList]=useState(false)
   const[groups,setGroups]=useState(true)
@@ -23,7 +25,7 @@ export default function CreateAlertForm({renderCreateAlert}){
   const[media,showMedia]=useState(false);
   
 
-  const url = 'http://127.0.0.1:3500/alatpres/api/alerts'
+  const baseUrl = 'https://cfca-102-219-208-195.in.ngrok.io'
   function postToApi(){
     const sendData ={
       type:inpuData.type,
@@ -41,7 +43,7 @@ export default function CreateAlertForm({renderCreateAlert}){
     //    'Content-Type': 'application/json',
     //  },body:JSON.stringify(sendData)})
     axios
-    .post("http://192.168.100.35:3500/alatpres/api/alerts",sendData)
+    .post(`${bseUrl}/api/alerts",sendData`)
     .then(res=>{setResponse(res)})
     .catch(error=>{console.info(error)})
   }
@@ -80,7 +82,9 @@ export default function CreateAlertForm({renderCreateAlert}){
 
       <SelectList data={data}
               placeholder=" Choose Alert Type"
-              setSelected={val=>{setInputData({type:val})}}
+              setSelected={val=>{setInputData({type:val}) 
+              alert(inpuData.type)
+            }}
               boxStyles={{
                 backgroundColor:'white',
                 width:'96%',
@@ -140,7 +144,9 @@ export default function CreateAlertForm({renderCreateAlert}){
           {groups&&(
              <MultipleSelectList data={grp}
              placeholder=" Choose Response Group"
-             setSelected={vals=>{setInputData({groups:vals})}}
+             setSelected={vals=>{setresponsegroups(vals)
+           
+            }}
              boxStyles={{
                backgroundColor:'white',
                width:'96%',
@@ -155,6 +161,7 @@ export default function CreateAlertForm({renderCreateAlert}){
              }}
              save="value"
              onSelect={()=>{
+              alert(responsegroups)
               //alert(choosenResponseGroups)
              }}
              />

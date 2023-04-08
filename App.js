@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, Image,Switch, TouchableOpacity } from 'react-na
 import Dashboard from './components/basic/Dashboard'
 import Registration from "./components/basic/Registration"
 import Searchbar from './components/Searchbar'
+import Infoslider from './components/basic/pages/Infoslider';
 
 export default function App() {
   //Sidebar config
@@ -13,21 +14,25 @@ export default function App() {
  
   const[acessLocation,setAccessLocation]=useState();
   //Basic Dashboard config
-  const[basicDashboard,setBasicDashboard]=useState(true);//change to true later
+  const[basicDashboard,setBasicDashboard]=useState(false);//change to true later
   /*search area test */
   const[showSearch,setShowSearch]=useState(false)//default false
   //registration
   const[registrationPage,showRegistrationPage]=useState(false)
+  //intro slider
+  const[intro,setIntro]=useState(true)
   
   return (
    <View  >
    
     
-    {registrationPage && <Registration showRegistrationPage={showRegistrationPage} setBasicDashboard={setBasicDashboard} />}
+    {registrationPage && <Registration showRegistrationPage={showRegistrationPage} setBasicDashboard={setBasicDashboard} setIntro={setIntro} />}
 
     {basicDashboard&&<Dashboard setBasicDashboard={setBasicDashboard} setAccessLocation={setAccessLocation}  showRegistrationPage={showRegistrationPage} />}
    
     {showSearch&&<Searchbar/>}
+
+    {intro && <Infoslider setIntro={setIntro} showRegistrationPage={showRegistrationPage} />}
    
    </View> 
    
