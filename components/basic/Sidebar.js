@@ -3,6 +3,7 @@ import { TouchableOpacity,View,Text,Image,ScrollView, Switch } from "react-nativ
 import FontAwsome  from '@expo/vector-icons/FontAwesome'
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Profile from "./pages/Profile";
 
 
 export default function({renderSidebar}){
@@ -35,7 +36,7 @@ export default function({renderSidebar}){
         borderStyle:'solid',
         borderColor:'#1e8ee1',
         borderWidth:1.5,
-        zIndex:100
+        zIndex:100,
     }} >
        <View style={{
         marginTop:-5,
@@ -213,6 +214,13 @@ export default function({renderSidebar}){
         }} >Refer a Friend </Text>
         
        </TouchableOpacity>
+       {profile &&(
+        <view style={{
+            height:"100%",
+        }} >
+            <Profile/>
+        </view>
+       )}
         
         </ScrollView>)
 }

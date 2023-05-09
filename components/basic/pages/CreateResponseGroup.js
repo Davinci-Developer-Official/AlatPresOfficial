@@ -3,8 +3,27 @@ import { View,Text,TextInput,TouchableOpacity, ScrollView } from "react-native";
 import FontAwsome from '@expo/vector-icons/FontAwesome'
 import{groups}from '../../../mockData/metrics'
 import axios from "axios";
-export default function CreateResponseGroup({renderCreateResponseGroup}){
-   
+import envr from "../../../env"
+import * as Contacts from  "expo-contacts"
+
+export default function CreateResponseGroup({rendersegmentselector,renderCreateResponseGroup,setcreateresgrouppage,rendergroupssegment}){
+   const[error,setError]=useState(undefined)
+   const[contacts,setContacts]=useState(undefined)
+    async function smspermission(){
+        const {status} = await Contacts.requestPermissionsAsync();
+        if (status==="granted"){
+            const {data} = await Contacts.getContactsAsync({
+                fields:[Contacts.Fields.FirstName,Contacts.Fields.LastName,Contacts.Fields.PhoneNumbers]
+            })
+
+            if(data.length > 0){
+                setContacts(data)
+            }else{setError("No contacts available")}
+        }else{
+            setError("Permissionn denied")
+        }
+    }
+
     /*form data*/
     //group data
     const[groupname,setgroupname]=useState("");
@@ -30,7 +49,7 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
     const[dot4,showDot4]=useState(false);
     const[caseShow,setCaseShow]=useState(true)
     const [newGroup,setNewGroup]=useState(true)
-    const baseUrl ="https://cfca-102-219-208-195.in.ngrok.io"
+    const baseUrl = envr.API_URL
 
    
     //post data 
@@ -83,7 +102,10 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
 
         <FontAwsome name="times" size={20} onPress={e=>{
             e.preventDefault()
-            renderCreateResponseGroup(false)
+            //renderCreateResponseGroup(false)
+            setcreateresgrouppage(false)
+            rendergroupssegment(true)
+            rendersegmentselector(true)
         }} style={{
             marginLeft:10,
             marginTop:10,
@@ -527,6 +549,9 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
             display:"flex",
             flexDirection:"row",
         }} >
+        <View style={{
+            display:"flex",
+        }}>
         <TextInput  style={{
             backgroundColor:'white',
             width:'89%',
@@ -541,9 +566,11 @@ export default function CreateResponseGroup({renderCreateResponseGroup}){
         }} placeholder='  search user from contacts' 
         placeholderTextColor="Black"
         onChange={text=>{
-           
-        }}
+           smspermission()
+        } } 
         />
+
+        </View>
         <FontAwsome name="user" size={30} style={{
             color:"white",
             marginTop:10,
