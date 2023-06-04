@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { View,Text,TextInput,TouchableOpacity, ScrollView } from "react-native";
+import { View,Text,TextInput,TouchableOpacity, ScrollView,Image } from "react-native";
 import FontAwsome from '@expo/vector-icons/FontAwesome'
-import{groups}from '../../../mockData/metrics'
+import{groups, groupCategories}from '../../../mockData/metrics'
 import axios from "axios";
-import envr from "../../../env"
+import env_variables from "../../../env";
 import * as Contacts from  "expo-contacts"
+import { SelectList,MultipleSelectList } from 'react-native-dropdown-select-list';
 
 export default function CreateResponseGroup({rendersegmentselector,renderCreateResponseGroup,setcreateresgrouppage,rendergroupssegment}){
    const[error,setError]=useState(undefined)
@@ -27,7 +28,7 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
     /*form data*/
     //group data
     const[groupname,setgroupname]=useState("");
-    const[grouppurpose,setgrouppurpose]=useState("")
+   
     const[groupdescription,setgroupdescription]=useState("");
     const[groupcategory,setgroupcategory]=useState("");
     //members data
@@ -49,29 +50,81 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
     const[dot4,showDot4]=useState(false);
     const[caseShow,setCaseShow]=useState(true)
     const [newGroup,setNewGroup]=useState(true)
-    const baseUrl = envr.API_URL
+    
+    //group image
+    const pickImage = async () => {
+        try {
+            let result = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.All,
+              allowsEditing: true,
+              aspect: [4, 3],
+              quality: 1,
+            });
+          
+            if (!result.cancelled) {
+              // Use the selected image here
+              console.log(result.uri);
+            }
+            setImage(result.assets[0].uri);
+          } catch (error) {
+            // Handle any errors that occur
+            console.log(error);
+          }
 
+          //choosing the image
+          return(<View style={{
+            borderBottomColor:"#1e8ee1",
+            borderBottomWidth:1
+        }}>
+        <Image source={image != null  ? { uri: image }:require("../../../assets/prof2.png")} style={{ 
+            width: "100%", 
+            height: 200,
+            borderBottomWidth:1,
+            borderBottomColor:"black",
+         }} />
+         <TouchableOpacity style={{
+            position:"absolute",
+            height:30,
+           
+            backgroundColor:"#1e8ee1",
+            marginLeft:20,
+            marginTop:10,
+            borderRadius:20,
+           
+         }} onPress={()=>{
+            pickImage()
+         }} >
+            <Text style={{
+                marginTop:5,
+                marginLeft:5,
+                marginRight:5,
+                marginBottom:5,
+            }}> profile image </Text>
+         </TouchableOpacity>
+        </View>)
+
+      };
+      const[image,setImage]=useState(null)
    
     //post data 
         //response groups
         async function postResgroup(){
             try {
-                alert(`${groupname},${grouppurpose},${groupdescription},${groupcategory}`)
-               if(!groupname.trim() || !grouppurpose.trim() || !groupcategory.trim() ){
-                alert(`group name,grouppurpose or group category cannot be empty`);
-                return ;
-               }else{
-                const postRequest = await axios.post(`${baseUrl}/api/resgroup`,{
-                    groupname,grouppurpose,groupdescription,groupcategory
-                   })
-                 if(postRequest.status === 201){
-                    alert(`You just posted ${JSON.stringify(postRequest.data)}`);
-                    setgroupname="";
-                    setgrouppurpose="";
-                    setgroupdescription="";
-                    setgroupcategory=""
-                 }
-               }
+               
+               
+                const data = {
+                    groupprofileimage:image,
+                    groupname:groupname,
+                    groupdescription:groupdescription,
+                    groupcategory:groupcategory,
+                    groupadmin: "Thomas",
+                  }
+                  axios.post(env_variables.RESPONSEGROUPS_API,data)
+                  .then(res=>{
+                    console.log(JSON.stringify(res.data))
+                    
+                  })
+               
             
 
             } catch (error) {
@@ -80,18 +133,11 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
             }
 
          }
-        //members
-        async function postMembers(){
-            try {
-                if(!membername.trim()||!memberphonenumber){
-                    alert(`member's name and phonenumber cannot be empty`)
+      //categories
+      const categories = [...groupCategories]
 
-                }
-            } catch (error) {
-                console.error(error)
-                
-            }
-        }
+        
+
     return(
        <View style={{
         position:'absolute',
@@ -122,6 +168,59 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
             marginTop:10,
         }} >
        
+       <View style={{
+            borderBottomColor:"#1e8ee1",
+            borderBottomWidth:1
+        }}>
+        <Image source={image != null  ? { uri: image }:require("../../../assets/prof2.png")} style={{ 
+            width: "100%", 
+            height: 200,
+            borderBottomWidth:1,
+            borderBottomColor:"black",
+         }} />
+         <TouchableOpacity style={{
+            position:"absolute",
+            height:30,
+           
+            backgroundColor:"#1e8ee1",
+            marginLeft:20,
+            marginTop:10,
+            borderRadius:20,
+           
+         }} onPress={()=>{
+            pickImage()
+         }} >
+            <Text style={{
+                marginTop:5,
+                marginLeft:5,
+                marginRight:5,
+                marginBottom:5,
+            }}>currently  Unavailable </Text>
+         </TouchableOpacity>
+        </View>
+
+
+       <SelectList data={categories}
+              placeholder=" choose a responder"
+              setSelected={val=>{setgroupcategory(val) }}
+              boxStyles={{
+                backgroundColor:'white',
+                width:'96%',
+                marginLeft:'2%',
+                fontFamily:'monospace',
+                marginTop:20,
+                borderStyle:'solid',
+                borderColor:'black',
+                borderWidth:1.5,
+                backgroundColor:'#1e8ee1'
+                
+              }}
+              save="value"
+              onSelect={()=>{
+                //alert(choosenAlert)
+              }}
+              
+          />
 
         <Text style={{
             textAlign:'center',
@@ -150,40 +249,7 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
             setgroupname(text)
             
         }}
-        />
-
-        
-        
-    
-
-        <Text  style={{
-            textAlign:'center',
-            marginTop:25,
-            height:30,
-            backgroundColor:'#1e8ee1',
-            width:'96%',
-            marginLeft:'2%',
-            borderStyle:'solid',
-            borderColor:'black',
-            borderWidth:1.0,
-            paddingTop:6,
-        }} >Group Purpose</Text>
-        <TextInput placeholder="enter group purpose"
-        style={{
-            backgroundColor:'white',
-            width:'96%',
-            marginLeft:'2%',
-            
-            height:40,
-            padding:10,
-            borderStyle:'solid',
-            borderColor:'black',
-            borderWidth:1.0,
-        }}
-        onChangeText={(text)=>{
-            setgrouppurpose(text);
-        }}
-        />
+        />   
 
         <View>
             <Text  style={{
@@ -218,458 +284,14 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
         />
         </View>
 
-        <View style={{
-            display:'flex',
-            flexDirection:'column',
-            height:200,
-            backgroundColor:'white',
-            marginTop:25,
-            width:'96%',
-            marginLeft:'2%',
-            borderRadius:20,
-            borderStyle:'solid',
-            borderColor:'black',
-            borderWidth:1.0,
-            marginBottom:10,
-        }} >
-            <Text style={{
-                textAlign:'center',
-                marginTop:15,
-                marginBottom:5,
-            }} >Response category</Text>
+        
+        
+      
 
-            {cregion1&&(
-                <View style={{
-                    display:'flex',
-                    flexDirection:'row',
-                    justifyContent:'space-between',
-                    marginTop:15,
-                   
-                }} >
-                    <TouchableOpacity style={{
-                        backgroundColor:'#1e8ee1',
-                        height:50,
-                        width:'45%',
-                        marginLeft:'2%',
-                        borderRadius:10,
-                        marginRight:'6%',
-                        display:"flex",
-                        flexDirection:'row',
-                        borderStyle:'solid',
-                        borderColor:'black',
-                        borderWidth:1.0,
-                    }} onPress={()=>{
-                        showDot1(true);
-                      
-                        showDot2(false);
-                        showDot3(false);
-                        showDot4(false);
-                        if(dot1){
-                            setgroupcategory("government organisation")
-                        }else{
-                           setgroupcategory("")
-                        }
-                    }}  >
-                        <Text style={{
-                            textAlign:'center',
-                            paddingTop:15,
-                            paddingLeft:20
-                        }} >government org</Text>
-                        {dot1&&<FontAwsome name='check' size={15} style={{
-                            marginTop:15,
-                            marginLeft:12,
-                        }}  />}
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        backgroundColor:'#1e8ee1',
-                        height:50,
-                        width:'45%',
-                        
-                        borderRadius:10,
-                        marginRight:4,
-                        display:"flex",
-                        flexDirection:'row',
-                        borderStyle:'solid',
-                        borderColor:'black',
-                        borderWidth:1.0,
-                    }} onPress={()=>{
-                        showDot2(true);
-                        showDot1(false);
-                        showDot3(false);
-                        showDot4(false);
-                        if(dot2){
-                            setgroupcategory("non-governmental organisation")
-                        }else{
-                            setgroupcategory("")
-                        }
-                        
-                    }} >
-                        <Text style={{
-                            textAlign:'center',
-                            paddingTop:15,
-                            paddingLeft:35
-                        }} >NGO Org</Text>
-                        {dot2&&<FontAwsome name='check' size={15} style={{
-                            marginTop:15,
-                            marginLeft:12,
-                        }}  />}
-                    </TouchableOpacity>
-                </View>
-            )}
-            {cregion2&&(
-                 <View style={{
-                    display:'flex',
-                    flexDirection:'row',
-                    justifyContent:'space-between',
-                    marginTop:15,
-                 }} >
-                <TouchableOpacity style={{
-                    backgroundColor:'#1e8ee1',
-                    height:50,
-                    width:'45%',
-                    marginLeft:'2%',
-                    borderRadius:10,
-                    marginRight:'6%',
-                    display:"flex",
-                    flexDirection:'row',
-                    borderStyle:'solid',
-                    borderColor:'black',
-                    borderWidth:1.0,
-                }} onPress={()=>{
-                        showDot2(false);
-                        showDot1(false);
-                        showDot3(true);
-                        showDot4(false);
-                        if(dot3){
-                            setgroupcategory("Nyumba kumi organisation")
-                        }else{
-                            setgroupcategory("")
-                        }
-                        
-                    }} >
-                    <Text style={{
-                        textAlign:'center',
-                        paddingTop:15,
-                        paddingLeft:25
-                    }} >nyumba kumi</Text>
-                    {dot3&&<FontAwsome name='check' size={15} style={{
-                            marginTop:15,
-                            marginLeft:12,
-                        }}  />}
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                     backgroundColor:'#1e8ee1',
-                     height:50,
-                     width:'45%',
-                     
-                     borderRadius:10,
-                     marginRight:4,
-                     display:"flex",
-                     flexDirection:'row',
-                     borderStyle:'solid',
-                    borderColor:'black',
-                    borderWidth:1.0,
-                }} onPress={()=>{
-                        showDot2(false);
-                        showDot1(false);
-                        showDot3(false);
-                        showDot4(true);
-                        if(dot4){
-                            setgroupcategory("Youth group organisation")
-                        }else{
-                            setgroupcategory("")
-                        }
-                        
-                    }} >
-                    <Text style={{
-                        textAlign:'center',
-                        paddingTop:15,
-                        paddingLeft:25
-                    }} >youth group</Text>
-                    {dot4&&<FontAwsome name='check' size={15} style={{
-                            marginTop:15,
-                            marginLeft:12,
-                            
-                        }}  />}
-                </TouchableOpacity>
-              </View>
-            )}
-        </View>
- 
         </ScrollView>
        )}
         
-        {formMembers&&(
-            
-            <View style={{
-                display:'flex',
-                flexDirection:'column',
-                borderStyle:'solid',
-                borderColor:'black',
-                borderWidth:1.0,
-                width:'96%',
-                marginTop:5,
-                marginLeft:'2%',
-              }}>
-            
-            
-           
-            <View style={{
-                display:'flex',
-                flexDirection:'row',
-                justifyContent:'space-between',
-                
-                backgroundColor:'#1e8ee1',
-                borderStyle:'solid',
-                borderColor:'black',
-                borderWidth:1.0,
-                width:'100%'
-            }} >
-
-                
-            <TouchableOpacity onPress={()=>{
-                    renderAddMember(true);
-                    setFormMembers(true);
-                    setAddedMembers(false);
-                }} style={{
-                    backgroundColor:'white',
-                    width:'35%',
-                    height:40,
-                    marginBottom:'1%',
-                    marginTop:'1%',
-                    borderRadius:30,
-                    display:'flex',
-                    flexDirection:'row',
-                    borderStyle:'solid',
-                    borderColor:'black',
-                    borderWidth:1.0,
-                    marginLeft:10
-                    
-                }} ><FontAwsome name='plus' size={18} style={{
-                    paddingTop:10,
-                    paddingLeft:8
-                }}  />
-                    <Text style={{
-                         textAlign:'center',
-                         paddingTop:10,
-                         paddingLeft:8,
-                    }} >Add members</Text>
-                </TouchableOpacity>
-                
-                {openEye&&<Text style={{
-                    marginRight:20,
-                    marginTop:10,
-                }} >Show Members <FontAwsome name='eye' size={30} style={{
-                    marginLeft:5,
-                    marginTop:'3%'
-                }} onPress={()=>{
-                    setAddedMembers(true);
-                    setOpenEye(false);
-                    setClosedEye(true);
-                    renderAddMember(false);
-                    //setNewGroup(false)
-                }} /></Text>}
-                {closedEye&&<Text  style={{
-                    marginRight:20,
-                    marginTop:10,
-                }} >Hide Members <FontAwsome name='eye-slash' size={30}  style={{
-                    marginRight:'5%',
-                    marginTop:'3%'
-                }} onPress={()=>{
-                    setAddedMembers(false)
-                    setOpenEye(true);
-                    setClosedEye(false);
-                }} /></Text>}
-            </View>
-            
-            
-
-            {addedMembers&&(
-                <ScrollView style={{
-                    height:450,
-                    marginTop:5
-                }}>
-                 
-                {groups.map(all=>(
-                       <View style={{
-                        backgroundColor:'white',
-                        padding:1,
-                       }} >
-                        {all.members.map(mbs=>(
-                            <View key={mbs.id} style={{
-                                backgroundColor:'red',
-                                marginTop:2,
-                                marginBottom:2,
-                                width:"70%",
-                                marginLeft:'15%',
-                                display:'flex',
-                                flexDirection:'row',
-                               
-                                height:40,
-                                borderRadius:20,
-                            }} >
-                                <FontAwsome name="times" size={30} style={{
-                                    marginLeft:10,
-                                    marginTop:5
-                                }}  />
-                                <Text style={{
-                                    marginLeft:40,
-                                    marginTop:10,
-                                }} >{mbs.mname}</Text>
-                                <Text style={{
-                                    marginLeft:40,
-                                    marginTop:10,
-                                }} >{mbs.mphone}</Text>
-                            </View>
-                        ))}
-                        
-                       </View>
-                    ))}
-                </ScrollView>
-            )}
-            
-               
-              </View>
-        )}
-
-        {addMembers&&(
-            <View style={{
-                backgroundColor:'black',
-                marginTop:5,
-            }} >
-        <FontAwsome name='times' size={20} style={{
-            marginTop:12,
-           marginLeft:12,
-            color:'white',
-        }} onPress={()=>{
-            setFormMembers(true)
-            renderAddMember(false)
-        }} />
-        <View style={{
-            display:"flex",
-            flexDirection:"row",
-        }} >
-        <View style={{
-            display:"flex",
-        }}>
-        <TextInput  style={{
-            backgroundColor:'white',
-            width:'89%',
-            marginLeft:'2%',
-           
-            height:40,
-            marginTop:5,
-            borderStyle:'solid',
-            borderColor:'black',
-            borderWidth:1.0,
-            padding:5,
-        }} placeholder='  search user from contacts' 
-        placeholderTextColor="Black"
-        onChange={text=>{
-           smspermission()
-        } } 
-        />
-
-        </View>
-        <FontAwsome name="user" size={30} style={{
-            color:"white",
-            marginTop:10,
-            marginLeft:4,
-        }}  />
-        </View>
-        <Text style={{
-            textAlign:'center',
-            marginTop:12,
-            color:'white'
-        }} >Their Name</Text>
-        <TextInput value={membername} style={{
-            backgroundColor:'white',
-            width:'96%',
-            marginLeft:'2%',
-            borderRadius:25,
-            height:40,
-            marginTop:5,
-            borderStyle:'solid',
-            borderColor:'black',
-            borderWidth:1.0,
-        }} placeholder='  enter member name' 
-        onChange={text=>{
-            setmembername(text)
-        }}
-        />
-
-        <Text style={{
-            textAlign:'center',
-            marginTop:12,
-            color:'white'
-        }} >Their Phone number</Text>
-        <TextInput value={memberphonenumber} style={{
-            backgroundColor:'white',
-            width:'96%',
-            marginLeft:'2%',
-            borderRadius:25,
-            height:40,
-            marginTop:5,
-            borderStyle:'solid',
-            borderColor:'black',
-            borderWidth:1.0,
-        }} placeholder='  enter Phone Number' 
-        onChange={text=>{
-           setmemberphonenumber(text)
-        }}
-        />
-
-  
-
-        <Text style={{
-            textAlign:'center',
-            marginTop:12,
-            color:'white'
-        }} >Member Role</Text>
-        <TextInput value={memberrole} style={{
-            backgroundColor:'white',
-            width:'96%',
-            marginLeft:'2%',
-            borderRadius:25,
-            height:40,
-            marginTop:5,
-            borderStyle:'solid',
-            borderColor:'black',
-            borderWidth:1.0,
-            padding:5,
-        }} placeholder="  enter member's role" 
-        onChange={text=>{
-           setmemberrole(text)
-        }}
-        />
-
-        
-
-        <TouchableOpacity style={{
-            backgroundColor:'white',
-            width:'30%',
-            height:40,
-            marginLeft:"35%",
-            marginTop:'5%',
-            borderRadius:30,
-            borderStyle:'solid',
-            borderColor:'black',
-            borderWidth:1.0,
-            marginBottom:12,
-        }} onPress={()=>{
-            setAddedMembers(true);
-            renderAddMember(false);
-            setOpenEye(false);
-            setClosedEye(true);
-        }} >
-            <Text style={{
-                textAlign:'center',
-                paddingTop:10
-            }} >Add Member</Text>
-        </TouchableOpacity>
-            </View>
-        )}
-
+       
 
         <TouchableOpacity style={{
             backgroundColor:'#1e8ee1',
@@ -684,9 +306,13 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
             marginBottom:12,
         }} onPress={(e)=>{
             e.preventDefault();
-            //renderCreateResponseGroup(false);
-            
+            //renderCreateResponseGroup(false); 
             postResgroup()
+            setTimeout(()=>{
+                setcreateresgrouppage(false)
+            rendergroupssegment(true)
+            rendersegmentselector(true)
+            },2000)
         }}  >
             <Text style={{
                 textAlign:'center',

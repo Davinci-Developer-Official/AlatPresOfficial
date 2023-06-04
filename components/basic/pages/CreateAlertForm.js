@@ -6,18 +6,20 @@ import { alertTypes,responseProvider,responseGroups, alerts } from '../../../moc
 import axios from 'axios';
 import { useEffect } from 'react';
 import env_variables from '../../../env';
+
+
 export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,renderalertssegment,rendersegmentselector}){
 
-  const[inpuData,setInputData]=useState({
-    type:"",
-    location:"",
-    description:"",
-    responders:responseproviders,
-    groups:responsegroups, 
-    audio:"",
-    video:"",
-    file:"",
-  })
+  //data
+  const[alerttype,setalerttype]=useState("");
+  const[responseprovider,setresponseprovider]=useState("");
+  const[alertlocation,setalertlocation]=useState("");
+  const[alertdescription,setalertdescription]=useState("");
+  const[alertaudio,setalertaudio]=useState("");
+  const[alertvideo,setalertvideo]=useState("");
+  const[alertfile,setalertfile]=useState("");
+  const[alertsender,setalertsender]=useState("");
+  //
   const [ responsegroups,setresponsegroups]=useState([])
   const  [responseproviders,setresponseproviders]=useState([])
   const [response,setResponse]=useState([])
@@ -51,27 +53,32 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
   }
   
   function postData(){
-    const timesSent = '';
-    const datePosted = '';
-    postToApi()
-    const sendDatas ={
-      type:inpuData.type,
-      location:inpuData.location,
-      description:inpuData.description,
-      responders:inpuData.responders, 
-      audio:inpuData.audio,
-      video:inpuData.video,
-      file:inpuData.file,
+    const data = {
+      type: alerttype,
+      responders: responseprovider,
+      location: alertlocation,
+      description: alertdescription,
+      audio: alertaudio,
+      file:alertfile,
+      video: alertvideo,
+      sender:"Thomas"
     }
-    alerts.push(inpuData);
-    alert(JSON.stringify({sendDatas}))
-
+    axios.post(env_variables.ALERTS_API,data)
+    .then(res=>{
+      console.log(res.data)
+      
+    })
+    .catch(error=>{
+      console.error(error)
+      alert(error)
+    })
 
   }
 
   const data=[...alertTypes]
   const grp=[...responseGroups]
-  const providers=[...responseProvider]
+  const provider=[...responseProvider]
+  const providers = grp.concat(provider)
   
 
   return(
@@ -104,9 +111,7 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
 
       <SelectList data={data}
               placeholder=" Choose Alert Type"
-              setSelected={val=>{setInputData({type:val}) 
-              alert(inpuData.type)
-            }}
+              setSelected={val=>{setalerttype(val) }}
               boxStyles={{
                 backgroundColor:'white',
                 width:'96%',
@@ -125,7 +130,26 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
               }}
               
           />
-      
+      <SelectList data={providers}
+             placeholder=" Choose Responder"
+             setSelected={vals=>{setresponseprovider(vals)}}
+             boxStyles={{
+               backgroundColor:'white',
+               width:'96%',
+               marginLeft:'2%',
+               fontFamily:'monospace',
+               marginTop:5,
+               borderStyle:'solid',
+               borderColor:'black',
+               borderWidth:1.5,
+               backgroundColor:'white',
+               marginBottom:5
+             }}  
+             save="value"
+             onSelect={()=>{
+              //alert(choosenResponder)
+             }}           
+         />
      
       <View style={{
         backgroundColor:'white',
@@ -151,7 +175,7 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
           marginBottom:10,
           
         }} placeholder='location of the alert' onChangeText={val=>{
-          setInputData({location:val})
+         setalertlocation(val)
         }} />
       </View>       
      
@@ -185,7 +209,7 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
           paddingLeft:5,
           
         }} placeholder=" Describe here"  onChangeText={val=>{
-          setInputData({description:val})
+         setalertdescription(val)
         }} multiline={true} maxLength={400}  />
       </View>
       
@@ -290,16 +314,25 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
             height:40,
             marginTop:4,
             marginLeft:'35%',
-            paddingTop:12,
+            paddingTop:10,
             paddingLeft:25,
             borderRadius:30,
             borderStyle:'solid',
             borderColor:'black',
             borderWidth:1.5,
+            marginBottom:15,
           }} onPress={()=>{
             //renderCreateAlert(false);
             //postToApi()
             postData()
+
+            
+
+            setTimeout(()=>{
+              setcreatealertpage(false)
+              renderalertssegment(true)
+              rendersegmentselector(true)
+            },2000)
           }}  >
             <Text>Make Alert</Text>
           </TouchableOpacity>

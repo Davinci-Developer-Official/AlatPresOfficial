@@ -44,13 +44,13 @@ export default function Profile({showProfile,setsideBar}){
             position:"absolute",
             height:"100%",
             width:"100%",
-            backgroundColor:"red",
+            backgroundColor:"white",
         }}>
             <Text>Profile</Text>
             <View style={{
                 display:"flex",
                 flexDirection:"row",
-                height:"4%",
+                height:"5%",
                 backgroundColor:"white",
             }} >
                 <TouchableOpacity style={{
@@ -75,7 +75,7 @@ export default function Profile({showProfile,setsideBar}){
             <Text>Primary information</Text>
             {primaryForm&&(
                 <View style={{
-                    width:"96%",
+                    width:"95%",
                    
                     backgroundColor:"white",
                     marginLeft:"2%",
@@ -88,6 +88,7 @@ export default function Profile({showProfile,setsideBar}){
                     <View style={{
                         borderBottomColor:"#1e8ee1",
                         borderBottomWidth:1
+                        
                     }}>
                     <Image source={image != null  ? { uri: image }:require("../../../assets/prof2.png")} style={{ 
                         width: "100%", 
@@ -201,10 +202,13 @@ export default function Profile({showProfile,setsideBar}){
                 
 
             }}>
+            <Text>Password</Text>
                  <View style={{
                     display:"flex",
                     flexDirection:"row",
+                    
                  }}>
+                 
                  <TextInput placeholder=" ******** " style={{
                         borderBottomColor:"black",
                         borderBottomWidth:1,

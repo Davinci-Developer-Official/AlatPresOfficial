@@ -1899,64 +1899,64 @@ const groupListing=[
 
 
 const alertTypes =[{key:1,
-    value:'Abstraction Of Justice',
+    value:'Suspicious Activity [SA]',
    },
    {key:2,
-     value:'Buglary'},
+     value:'Suspicious Person [SP]'},
      {key:3,
-       value:'Child Abuse'},
+       value:'Buglary [BG]'},
        {key:4,
-         value:'Cyber Crime'},
+         value:'Cyber Crime [CC]'},
          {key:5,
-           value:'Demonstrations'},
+           value:'Fraud'},
            {key:6,
-             value:'Drunk and Disorderly'},
+             value:'Vandalism'},
              {key:7,
-               value:'Drugs Induced crime'},
+               value:'Disturbing of Peace [DOP] '},
                {key:8,
-                 value:'Domestic Violence'},
+                 value:'Demonstrations [DEMOS]'},
                  {key:9,
-                   value:'Enviromental Destruction'},
+                   value:'Riots'},
                    {key:10,
-                     value:'Fire Outbreak'},
+                     value:'Terrorism [TM]'},
                      {key:11,
-                       value:'Female genital Mutilation.(FGM)'},
+                       value:'Industrial Accidents [ACC]'},
                        {key:12,
-                         value:'Fraud'},
+                         value:'Traffic Incident'},
                          {key:13,
-                           value:'Floods'},
+                           value:'Traffic Accidents'},
                        {key:14,
-                         value:'Gender Violence'},
+                         value:'Fire'},
                          {key:15,
-                           value:'Illegal Gambling'},
+                           value:'Drugs  '},
                            {key:16,
-                             value:'Illict Alcohol Brewing'},
+                             value:'Public Health Concern [PH]'},
                              {key:17,
-                               value:'Industrial Incident'},
+                               value:'Poaching & Wildlife'},
                                {key:18,
-                                 value:'Kidnapping'},
+                                 value:'Domestic Violence'},
                                  {key:19,
-                                   value:'Murder'},
+                                   value:'Homicide'},
                                    {key:20,
-                                     value:'Prostitution'},
+                                     value:'Rape'},
                                      {key:21,
-                                       value:'Public Nudity'},
+                                       value:'General Violence'},
                                        {key:22,
                                          value:'Ponography'},
                                          {key:23,
-                                           value:'Poaching'},
+                                           value:'Bribery'},
                                          {key:24,
-                                           value:'Rape'},
+                                           value:'illegal Business'},
                                            {key:25,
-                                             value:'Robbery'},
+                                             value:'Female Genital Mutilation [FGM] '},
                                              {key:26,
-                                               value:'Riots'},
+                                               value:'Prostitution'},
                                                  {key:27,
-                                                   value:'Suspicious Activity'},
+                                                   value:'Ponography'},
                                                      {key:28,
-                                                       value:'Suspicious person(s)'},
+                                                       value:'Kidnapping'},
                                                          {key:29,
-                                                           value:'Terrorists Attack'},
+                                                           value:'Gambling'},
                                                            {key:30,
                                                              value:'Vandalism'}]
 
@@ -2117,6 +2117,26 @@ The limitations and prohibitions of liability set in this Section and elsewhere 
 
 As long as the website and the information and services on the website are provided free of charge, we will not be liable for any loss or damage of any nature.`
 
+
+const groupCategories=[
+    {
+        key:1,
+        value:"government org"
+    },
+    {
+        key:2,
+        value:"Non-Governmantal org"
+    },
+    {
+        key:3,
+        value:"Nyumba Kumi "
+    },
+    {
+        key:4,
+        value:"Youth group"
+    }
+]
+
 module.exports={
-    geoData,stats,top,alerts,groups,groupListing,alertTypes,responseGroups,responseProvider,TOA
+    geoData,stats,top,alerts,groups,groupListing,alertTypes,responseGroups,responseProvider,TOA,groupCategories
 }

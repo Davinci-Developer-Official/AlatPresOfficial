@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { SafeAreaView,View,TouchableOpacity,Text,Image,Switch,StatusBar, ScrollView, FlatList, TextInput } from "react-native"
+import { useEffect, useState } from "react"
+import { Dimensions,SafeAreaView,View,TouchableOpacity,Text,Image,Switch,StatusBar, ScrollView, FlatList, TextInput, RefreshControl, ActivityIndicator } from "react-native"
 import FontAwsome from '@expo/vector-icons/FontAwesome'
 import CreateAlertForm from "./pages/CreateAlertForm"
 import IndividualAlert from "./pages/IndividualAlert"
@@ -11,9 +11,12 @@ import CreateReport from "./pages/CreateReport"
 import MyReports from "./pages/MyReports"
 import AllReports from "./pages/AllReports"
 import Providers from "./pages/Providers"
+import axios from "axios"
+import env_variables from "../../env"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash}){
+export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,UserCredentials}){
     const[adminPrivalages,setadminprevalages]=useState(false)
     const[headbar,renderHeadbar]=useState(true) //Headbar
     /*Headbar content */
@@ -99,6 +102,12 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash}){
     const[description,showdescription]=useState(true)
     const[yourAlerts,setYourAlerts]=useState(false)
 
+    const[fullalerts,setFullAlerts]=useState(false)
+    const[panel,showPanel]=useState(true)
+     const [selectedItem, setSelectedItem] = useState(null);
+    const[maximize,setMaximize]=useState(true)
+    const[minimize,setMinimize]=useState(false)
+   
     /*alerts segment*/
     const[groupssegment,rendergroupssegment]=useState(false) //groups segment
     /*groups  */
@@ -139,10 +148,86 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash}){
         setEnableSOS(previousState=>!previousState)
          
      }
+     
+     
 
+
+    //data fetching segment
+    const [alertdata, setalertData] = useState([]);
+    const[responsegroupdata,setresponsegroupdata]=useState([]);
+    const ifo = []
+    function fetchAlerts(){
+         axios.get(env_variables.ALERTS_API)
+         .then((res)=>{
+            const data =res.data;
+            const arr = [...data];
+            const rev = arr.reverse();
+            setalertData(rev);
+            setTriggerAlertReload(false);
+        });
+       
+    }
+
+    function fetchResponseGroups(){
+        axios.get(env_variables.RESPONSEGROUPS_API)
+         .then((res)=>{
+            const data = res.data;
+            const arr = [...data];
+            const rev = arr.reverse();
+            setresponsegroupdata(rev);
+            setTriggerGroupReload(false);
+        });
+    }
+
+    function fetchProviders(){
+
+    }
+    function fetchReports(){
+
+    }
+   
+    //trigger reload
+    const[triggerAlertReload,setTriggerAlertReload]=useState(true)
+    const[triggerGroupReload,setTriggerGroupReload]=useState(true)
+
+    //screen dimensions
+
+    const windowDimensions = Dimensions.get("window");
+    const screenDimensions = Dimensions.get("screen")
+
+    const[dimensions,setDimensions]=useState({
+        window:windowDimensions,
+        screen:screenDimensions,
+    })
     
 
+    const[user,setUser]=useState("")
+    //fetch Async Storage data
+    const [fetchedUsers,setFechedUsers]=useState([])
+    function fetchUser(){
+        axios.get(env_variables.Access_Api)
+        .then(res=>{
+            
+            const data = res.data
+            const arr = [...res.data]
+            setFechedUsers(arr)
+            console.log(fetchedUsers)
 
+        })
+    }
+    const[selectedUser,setSelectedUser]=useState("")
+     //useEffect
+     useEffect(()=>{
+        
+        const dimentionTracking = Dimensions.addEventListener('change',({window,screen})=>{
+            setDimensions({window,screen})
+        })
+        fetchAlerts()
+        fetchResponseGroups()
+        setTimeout(()=>{
+           fetchUser()
+       },10)
+    },[])
     return(
         <SafeAreaView>
          <StatusBar barStyle="dark-content" hidden={false} backgroundColor="#1e8ee1" translucent={true} />
@@ -291,48 +376,36 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash}){
                 }} >Enable Location</Text>
                </View>)}
                </View>
-               
-               <View style={{
-                display:"flex",
-                flexDirection:"row",
-                justifyContent:"space-evenly"
-               }} >
-                
-                 
-                
-               </View>
 
                <View style={{
                 display:"flex",
                 flexDirection:"row",
                 marginTop:10,
-                marginLeft:"10%",
+                marginLeft:"1%",
                 
-                width:"60%",
+                width:"100%",
+                marginBottom:10,
                }}>
-               <Text> Create new account ?  <Text style={{
-                color:"white"
+               <Text style={{
+                marginTop:7,
+                color:"white",
+               }} > Access your account or create a new account </Text>
+               <TouchableOpacity style={{
+                backgroundColor:"white",
+                borderRadius:5,
                }} onPress={()=>{
                 showRegistrationPage(true);
                 setUpdatedDash(false);
                 
-            }} >Sign up</Text></Text>
+            }} ><Text style={{
+                marginTop:5,
+                marginLeft:5,
+                marginRight:5,
+                marginBottom:5,
+            }} >here</Text></TouchableOpacity>
                </View>
-               <View style={{
-                display:"flex",
-                flexDirection:"row",
-                marginTop:10,
-                marginLeft:"10%",
-                marginBottom:10,
-                width:"60%",
-               }}>
-               <Text> Already have an account ? <Text style={{
-                color:"white"
-               }} >Sign in</Text></Text>
-               </View>
-
-
               
+
             </View>
         )}
 
@@ -689,55 +762,174 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash}){
         </View>)}
         {alertssegment&&(
             <View style={{
-                height:"100%",
+                height:"80%",
                 backgroundColor:"white"
             }} >
-                {!alerts.length == 0 ?
-                <FlatList data={alerts}
-                keyExtractor={(item)=>{item.id}}
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row",
+                    marginLeft:"30%",
+                    marginTop:2,
+                }} >
+                <FontAwsome name="angle-down" size={20} style={{
+                    marginRight:5,
+                }} />
+                  <Text style={{
+                    textAlign:"center",
+                }} >Pull down to refresh</Text>
+                 <FontAwsome name="angle-down" size={20} style={{
+                    marginLeft:5,
+                }} />
+                </View>
+                {triggerAlertReload ? <ActivityIndicator/> :null}
+                {alertdata.length == 0 ? <Text>You have no active alerts</Text>:
+                <FlatList data={alertdata}
+                  keyExtractor={(item) => item.id.toString()}
+                 refreshControl={
+                    <RefreshControl refreshing={triggerAlertReload} onRefresh={fetchAlerts} />
+                 }
+                 
                 renderItem={({item})=>(
-                    <View style={{
-                        backgroundColor:"#1e8ee1",
+                    
+                    <View key={item.id} style={{
+                        backgroundColor:"white",
                         marginTop:10,
                         width:"90%",
                         marginLeft:"5%",
                         
-                        
+                        borderStyle:"solid",
+                        borderWidth:1,
                         borderRadius:5,
                         
                     }} >
                        <View style={{
                         padding:4,
+                        
                        }} >
                         <View style={{
                             display:"flex",
                             flexDirection:"row",
                             justifyContent:"space-between",
+                            borderBottomStyle:"solid",
+                        borderBottomColor:"#1e8ee1",
+                        borderBottomWidth:1,
                         }}>
                         <Text style={{
                             fontSize:15
-                        }}>Alert Type : <Text style={{
+                        }}>Alert: <Text style={{
                             color:"red",
                         }} >{item.type}</Text> </Text>
                         <Text style={{
-                            fontSize:15
-                        }}>Alert Location : <Text style={{
-                            color:"white",
-                            marginRight:5,
-                        }}>{item.locationInfo}</Text></Text>
+                            fontSize:15,
+                            marginRight:15,
+                        }}>Location : <Text style={{
+                            color:"#1e8ee1",
+                            
+                        }}>{item.location}</Text></Text>
                         </View> 
                         {description&&(
                             <View style={{
                                 backgroundColor:"white",
-                                borderRadius:5,
+                                borderBottomStyle:"solid",
+                        borderBottomColor:"#1e8ee1",
+                        borderBottomWidth:1,
                                 width:"100%",
                                 padding:2
                             }} >
+                                <View style={{
+                                    borderBottomStyle:"solid",
+                        borderBottomColor:"#1e8ee1",
+                        borderBottomWidth:1,  
+                                }}>
                                 <TextInput value={item.description} multiline={true} editable={false} style={{
                                     color:"black",
                                     letterSpacing:1,
+                                    padding:5,
+                                    
                                 }}  />
-                                {!imageSection?( <Image source={require('../../assets/fire.jpeg')} style={{ 
+                                </View>
+                                {fullalerts&&(<View >
+                                    <View style={{
+                                        height:50,
+                                        width:"100%",
+                                        display:"flex",
+                                        flexDirection:"column",
+                                        marginTop:5,
+
+                                    }}>
+                                    <Text>Requested Responders :</Text>
+                                    <Text style={{
+                                        color:"#1e8ee1",
+                                        marginLeft:5
+                                    }}>{item.responders}</Text>
+                                    </View>
+                                    <View style={{
+                                        height:100,
+                                        width:"100%",
+                                        display:"flex",
+                                        flexDirection:"column",
+                                        marginTop:5,
+
+                                    }}>
+                                    <Text>Attachments</Text>
+                                    <View style={{
+                                        height:80,
+                                        borderWidth:1,
+                                        width:"100%",
+                                        borderColor:"#1e8ee1",
+                                        borderStyle:"dashed"
+                                    }} >
+                                       <Text style={{
+                                        marginTop:20,
+                                        color:"#1e8ee1",
+                                        marginLeft:5
+                                       }}>attachements are currently unavailable</Text>
+                                    </View>
+                                    </View>
+                                    <View style={{
+                                        height:40,
+                                        width:"100%",
+                                        display:"flex",
+                                        flexDirection:"column",
+                                        marginTop:5,
+
+                                    }}>
+                                    <Text>date sent</Text>
+                                    <Text style={{
+                                        color:"#1e8ee1",
+                                        marginLeft:5
+                                    }}>{item.dateposted}</Text>
+                                    </View>
+                                    <View style={{
+                                        height:40,
+                                        width:"100%",
+                                        display:"flex",
+                                        flexDirection:"column",
+                                        marginTop:5,
+
+                                    }}>
+                                    <Text>time sent</Text>
+                                    <Text style={{
+                                        color:"#1e8ee1",
+                                        marginLeft:5
+                                    }}>{item.timeposted}</Text>
+                                    </View>
+                                    <View style={{
+                                        height:50,
+                                        width:"100%",
+                                        display:"flex",
+                                        flexDirection:"column",
+                                        marginTop:5,
+
+                                    }}>
+                                    <Text>Sender :</Text>
+                                   <Text style={{
+                                    color:"#1e8ee1",
+                                    marginLeft:5
+                                   }}>{item.sender}</Text>
+                                    </View>
+                                </View>)}
+                                {imageSection?( <Image source={require('../../assets/fire.jpeg')} style={{ 
                                     height:100,
                                     width:"100%",
                                     marginLeft:".5%",
@@ -745,162 +937,193 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash}){
                                  }} />):""}
                             </View>
                         )}
-                       <View style={{
+                        <View style={{
                             display:"flex",
                             flexDirection:"row",
                             justifyContent:"space-between",
-                        }}>
-                        <Text>Alert Status :<Text style={item.status === "active"?{
-                            color:"#00FF00"
-                        }:{
-                            color:"white"
-                        }} > {item.status}</Text>  </Text>
-                        <Text> Date Posted : <Text style={{
-                            color:"white"
-                        }}>{item.datePosted}</Text></Text> 
-                        </View>
-                                               
-                       </View>
-                       <View style={{
-                            display:"flex",
-                            flexDirection:"row",
-                            justifyContent:"space-around",
                             height:40,
                             paddingTop:10,
                         }}>
-                             <Text style={item.status === "active"?{
-                            color:"black"
-                        }:{
-                            color:"#00FF00"
-                        }} > <FontAwsome name="expand"  size={20} /></Text> 
+                        {maximize  && <TouchableOpacity onPress={(ind)=>{
+                            setFullAlerts(true)
+                            setMaximize(false)
+                            setMinimize(true)
+                        }} >
                         <Text style={item.status === "active"?{
                             color:"black"
                         }:{
-                            color:"#00FF00"
-                        }} > <FontAwsome name="clock-o"  size={20} /></Text> 
+                            color:"#1e8ee1"
+                        }} > <FontAwsome name="expand" size={20} /></Text> 
+                        </TouchableOpacity>}
+                        {minimize&&<TouchableOpacity onPress={(ind)=>{
+                            setFullAlerts(false)
+                            setMaximize(true)
+                            setMinimize(false)
+                        }}  >
                         
                         <Text style={item.status === "active"?{
                             color:"black"
                         }:{
-                            color:"#00FF00"
-                        }} > <FontAwsome name="comment" size={20} /></Text> 
+                            color:"#1e8ee1"
+                        }} > <FontAwsome name="compress"  size={20} /></Text> 
+                        </TouchableOpacity>}
+                        
+                        
+                        
+                         
                          <Text style={item.status === "active"?{
                             color:"black"
                         }:{
-                            color:"#00FF00"
-                        }} > <FontAwsome name="retweet" size={20} /></Text> 
-                         <Text style={item.status === "active"?{
-                            color:"black"
-                        }:{
-                            color:"#00FF00"
-                        }} > <FontAwsome name="bookmark" size={20} /></Text> 
-                         <Text style={item.status === "active"?{
-                            color:"black"
-                        }:{
-                            color:"#00FF00"
-                        }} > <FontAwsome name="eye-slash" size={20} /></Text> 
-                         <Text style={item.status === "active"?{
-                            color:"black"
-                        }:{
-                            color:"#00FF00"
+                            color:"#1e8ee1"
                         }} > <FontAwsome name="share"  size={20} /></Text> 
                         </View>
                               
-                    </View>
+                    
+                                               
+                       </View>
+                    </View>  
                 )}
-                />:<Text style={{
-                    marginTop:100,
-                    marginLeft:100,
-                }} >You have no active alerts</Text>}
+                />}
                 
-                
-                {createalert&&(<TouchableOpacity style={{
+                {createalert&&(<TouchableOpacity style={dimensions.screen > 320 ?{
                    
-                    height:50,
-                    width:50,
-                    borderRadius:70,
-                    position:"absolute",
-                   marginTop:600,
-                   marginLeft:"70%",
-                   backgroundColor:"#1e8ee1",
-                    borderStyle:'solid',
-                    borderWidth:1,
-                    borderColor:"black",
-                  
-                }} onPress={()=>{
-                    setcreatealertpage(true)
-                    rendersegmentselector(false)
-                    renderalertssegment(false)
-                }} >
-                     <Text style={{
-                         padding:11,
-                         fontSize:15,
-                         color:"white"
-                    }} ><FontAwsome name="plus"  size={30} style={{
-                        padding:12,
-                   }}   />  Alerts</Text>
-                </TouchableOpacity>)}
+                   height:50,
+                   width:50,
+                   borderRadius:70,
+                   position:"absolute",
+                  marginTop:280,
+                  marginLeft:"70%",
+                  backgroundColor:"#1e8ee1",
+                   borderStyle:'solid',
+                   borderWidth:1,
+                   borderColor:"black",
+                 
+               }:{
+                   
+                   height:50,
+                   width:50,
+                   borderRadius:70,
+                   position:"absolute",
+                  marginTop:450,
+                  marginLeft:"70%",
+                  backgroundColor:"#1e8ee1",
+                   borderStyle:'solid',
+                   borderWidth:1,
+                   borderColor:"black",
+                 
+               }} onPress={()=>{
+                   setcreatealertpage(true)
+                   rendersegmentselector(false)
+                   renderalertssegment(false)
+               }} >
+                    <Text style={{
+                        padding:11,
+                        fontSize:15,
+                        color:"white"
+                   }} ><FontAwsome name="plus"  size={30} style={{
+                       padding:12,
+                  }}   />  Alerts</Text>
+               </TouchableOpacity>)}
+                
             </View>
         )}
         {groupssegment&&(
             <View style={{
-                height:"100%",
+                height:"80%",
                 backgroundColor:"white"
             }} >
-                {!alerts.length == 0 ?
-                <FlatList data={groups}
-                keyExtractor={(item)=>{item.id}}
+               <View style={{
+                    display:"flex",
+                    flexDirection:"row",
+                    marginLeft:"30%",
+                    marginTop:2,
+                }} >
+                <FontAwsome name="angle-down" size={20} style={{
+                    marginRight:5,
+                }} />
+                  <Text style={{
+                    textAlign:"center",
+                }} >Pull down to refresh</Text>
+                 <FontAwsome name="angle-down" size={20} style={{
+                    marginLeft:5,
+                }} />
+                </View>
+                {triggerGroupReload ? <ActivityIndicator/> :null}
+                {responsegroupdata.length == 0 ?<Text style={{
+                    marginTop:100,
+                    marginLeft:100,
+                }} >No groups available</Text>:
+                <FlatList data={responsegroupdata}
+                keyExtractor={(item) => item.id.toString()}
+                
+                refreshControl={
+                    <RefreshControl refreshing={triggerGroupReload} onRefresh={fetchResponseGroups} />
+                 }
                 renderItem={({item})=>(
-                    <View style={{
+
+                    <TouchableOpacity  style={{
                         display:"flex",
                         flexDirection:"row",
+                        borderWidth:1,
+                        borderStyle:"solid",
+                        marginTop:7,
                         width:"90%",
                         marginLeft:"5%",
-                        backgroundColor:"#1e8ee1",
-                        marginTop:10,
+                        justifyContent:"space-between",
+                        height:70,
+                        borderRadius:5,
 
-                    }}>
-                        <Image source={require(`../../assets/fire.jpeg`)} style={{
+                    }} >
+                        <Image source={require(`../../assets/community.png`)} style={{
                             height:50,
                             width:50,
                             paddingLeft:1,
-                            borderRadius:5,
+                            borderRadius:50,
+                            marginLeft:2,
+                            marginTop:10
                             
                         }}/>
-                        <View style={{
-                            display:"flex",
-                            flexDirection:"column",
-                            width:"80%"
-                        }} >
-                            <Text style={{
-                                textAlign:"center",
-                            }}>{item.groupname}</Text>
-                            <Text style={{
-                                textAlign:"center",
-                            }}>{item.groupcategory}</Text>
-                        </View>
-                    </View> 
+                        <Text style={{
+                            marginTop:25,
+                            fontSize:12,
+                        }}>{item.groupname}</Text>
+                        <Text style={{
+                            marginRight:20,
+                            marginTop:25,
+                            fontSize:10,
+                        }} >{item.groupcategory}</Text>
+                    </TouchableOpacity> 
                 )}
-                />:<Text style={{
-                    marginTop:100,
-                    marginLeft:100,
-                }} >No groups available</Text>}
+                />}
                 
                 
-                {creategroup&&(<TouchableOpacity style={{
+                {creategroup&&(<TouchableOpacity style={dimensions.screen > 320 ?{
                    
-                    height:50,
-                    width:50,
-                    borderRadius:70,
-                    position:"absolute",
-                   marginTop:600,
-                   marginLeft:"70%",
-                   backgroundColor:"#1e8ee1",
-                    borderStyle:'solid',
-                    borderWidth:1,
-                    borderColor:"black",
-                  
-                }} onPress={()=>{
+                   height:50,
+                   width:50,
+                   borderRadius:70,
+                   position:"absolute",
+                  marginTop:280,
+                  marginLeft:"70%",
+                  backgroundColor:"#1e8ee1",
+                   borderStyle:'solid',
+                   borderWidth:1,
+                   borderColor:"black",
+                 
+               }:{
+                   
+                   height:50,
+                   width:70,
+                   borderRadius:70,
+                   position:"absolute",
+                  marginTop:450,
+                  marginLeft:"70%",
+                  backgroundColor:"#1e8ee1",
+                   borderStyle:'solid',
+                   borderWidth:1,
+                   borderColor:"black",
+                 
+               }} onPress={()=>{
                     setcreateresgrouppage(true)
                     rendersegmentselector(false)
                     renderalertssegment(false)
@@ -970,7 +1193,7 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash}){
         {providerssegment&&(<View>
             <Providers />
         </View>)}
-        {sideBar&&(<UpdatedSidebar setsideBar={setsideBar} setShowBars={setShowBars} setUpdatedDash={setUpdatedDash} />)}
+        {sideBar&&(<UpdatedSidebar setsideBar={setsideBar} setShowBars={setShowBars} setUpdatedDash={setUpdatedDash} selectedUser={selectedUser} />)}
         </SafeAreaView>
     )
 }

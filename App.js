@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image,Switch, TouchableOpacity } from 'react-native';
 import Dashboard from './components/basic/Dashboard'
 import Registration from "./components/basic/Registration"
@@ -19,17 +19,22 @@ export default function App() {
   /*search area test */
   const[showSearch,setShowSearch]=useState(false)//default false
   //registration
-  const[registrationPage,showRegistrationPage]=useState(false)
+  const[registrationPage,showRegistrationPage]=useState(true)
   //intro slider
   const[intro,setIntro]=useState(false)
+  const [UserCredentials,setUserCredentials]=useState([])
+  const[updatedDash,setUpdatedDash]=useState(false)
 
-  const[updatedDash,setUpdatedDash]=useState(true)
-  
+  //const[userRegistered,setUserRegistered]=useState(true)
+  const[]=useState()
+
+
+ 
   return (
    <View  >
    
     
-    {registrationPage && <Registration showRegistrationPage={showRegistrationPage} setUpdatedDash={setUpdatedDash} setIntro={setIntro} />}
+    {registrationPage && <Registration UserCredentials={UserCredentials}  setUserCredentials={setUserCredentials} showRegistrationPage={showRegistrationPage} setUpdatedDash={setUpdatedDash} setIntro={setIntro} />}
 
     {basicDashboard&&<Dashboard setBasicDashboard={setBasicDashboard} setAccessLocation={setAccessLocation}  showRegistrationPage={showRegistrationPage} />}
    
@@ -37,7 +42,7 @@ export default function App() {
 
     {intro && <Infoslider setIntro={setIntro} showRegistrationPage={showRegistrationPage} />}
 
-    {updatedDash&&<UpdatedDashboard showRegistrationPage={showRegistrationPage} setUpdatedDash={setUpdatedDash} />}
+    {updatedDash&&<UpdatedDashboard  UserCredentials={UserCredentials} showRegistrationPage={showRegistrationPage} setUpdatedDash={setUpdatedDash} />}
    
    </View> 
    
