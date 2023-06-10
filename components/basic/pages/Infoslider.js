@@ -610,7 +610,7 @@ export default function Infoslider({showRegistrationPage,setIntro}){
 
         {selectionPanel&&(
             <View style={{
-                height:"3%",
+                height:"5%",
                 backgroundColor:"white",
                 display:'flex',
                 flexDirection:"row",

@@ -146,7 +146,7 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
         backgroundColor:'white'
        }} >
 
-        <FontAwsome name="times" size={20} onPress={e=>{
+        <TouchableOpacity   onPress={e=>{
             e.preventDefault()
             //renderCreateResponseGroup(false)
             setcreateresgrouppage(false)
@@ -155,7 +155,9 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
         }} style={{
             marginLeft:10,
             marginTop:10,
-        }} />
+        }}  >
+        <FontAwsome name="times" size={30} />
+        </TouchableOpacity>
 
        {newGroup&&(
          <ScrollView style={{
@@ -272,7 +274,7 @@ export default function CreateResponseGroup({rendersegmentselector,renderCreateR
             marginLeft:'2%',
            
             padding:10,
-           
+            marginBottom:10,
             
             borderStyle:'solid',
             borderColor:'black',

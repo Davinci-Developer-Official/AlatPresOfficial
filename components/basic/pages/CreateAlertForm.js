@@ -6,7 +6,7 @@ import { alertTypes,responseProvider,responseGroups, alerts } from '../../../moc
 import axios from 'axios';
 import { useEffect } from 'react';
 import env_variables from '../../../env';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,renderalertssegment,rendersegmentselector}){
 
@@ -51,8 +51,16 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
     //.then(res=>{setResponse(res)})
     //.catch(error=>{console.info(error)})
   }
-  
-  function postData(){
+  const[registeredUser,setRegisteredUser]=useState(null)
+  async function fetching(){
+    await AsyncStorage.getItem("user").then(res=>{
+      setRegisteredUser(res)
+      //alert(registeredUser)
+     
+  })
+  }
+  async function postData(){
+    await fetching()
     const data = {
       type: alerttype,
       responders: responseprovider,
@@ -61,7 +69,7 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
       audio: alertaudio,
       file:alertfile,
       video: alertvideo,
-      sender:"Thomas"
+      sender:registeredUser
     }
     axios.post(env_variables.ALERTS_API,data)
     .then(res=>{
@@ -80,6 +88,13 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
   const provider=[...responseProvider]
   const providers = grp.concat(provider)
   
+ 
+
+  useEffect(()=>{
+   if(registeredUser == null){
+    fetch()
+    }
+  },[fetch])
 
   return(
     <View style={{
@@ -89,12 +104,17 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
       backgroundColor:'white'
     }} >
 
-    <FontAwsome name='times' size={30} onPress={()=>{
+   <TouchableOpacity style={{
+    marginLeft:10,
+    marginTop:5,
+   }} onPress={()=>{
         //renderCreateAlert(false);
         setcreatealertpage(false)
         renderalertssegment(true)
         rendersegmentselector(true)
-      }} />
+      }} >
+   <FontAwsome name='times' size={30}  />
+   </TouchableOpacity>
 
     <ScrollView style={{
       width:'96%',

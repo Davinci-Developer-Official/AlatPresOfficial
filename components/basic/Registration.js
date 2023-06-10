@@ -114,9 +114,9 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
         }
     }
 
-    
+    const[asyncUser,setAsyncUser]=useState(null)
    
-    function Register(){
+    async function Register(){
         //alert(JSON.stringify(fetchedUsers));
         const profArr =[...fetchedUsers]  
         const findArr = profArr.find(user=>user.username == Username)
@@ -125,6 +125,8 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
            setusernameExists(true)
            setExistingUser(JSON.stringify(findArr.username));
            setUsername(null)
+        }else{
+            setAsyncUser(Username)
         }
                   
         if(Password !== confirmpassword ){
@@ -140,12 +142,18 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
             setExistingUser(true)
         }
         if(Username !== null && finalPassword !== null && !findArr ){
+        
          const data= {
             username:Username,
-            password:Password
+            password:Password,
          }
            axios.post(env_variables.Access_Api,data)
-           .then(res=>console.log(res.data))
+           .then(res=>{
+            //AsyncStorage.mergeItem("user",JSON.stringify(data.username))
+            console.log(res.data)
+        })
+       // await AsyncStorage.mergeItem("user",JSON.stringify(Username))
+        await AsyncStorage.setItem("user",JSON.stringify(asyncUser))
            setUserCredentials(data)
             showRegistrationPage(false)
             setUpdatedDash(true)
@@ -186,12 +194,16 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
         setAgreed(true)
        }
     }
+    function asyncStorageCheck(){
+        AsyncStorage.setItem("user","")
+        AsyncStorage.setItem("password","")
+    }
     useEffect(()=>{    
         fetchUsers()
         if(agreed){
             setProceedBtn(true)
-            AsyncStorage.setItem(Username,"")
-            //AsyncStorage.setItem(Password,"")
+            //asyncStorageCheck()
+           
         }
      },[])
 

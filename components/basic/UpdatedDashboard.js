@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Dimensions,SafeAreaView,View,TouchableOpacity,Text,Image,Switch,StatusBar, ScrollView, FlatList, TextInput, RefreshControl, ActivityIndicator } from "react-native"
+import { Dimensions,SafeAreaView,View,TouchableOpacity,Text,Image,Switch,StatusBar, ScrollView, FlatList, TextInput, RefreshControl, ActivityIndicator, Alert } from "react-native"
 import FontAwsome from '@expo/vector-icons/FontAwesome'
 import CreateAlertForm from "./pages/CreateAlertForm"
 import IndividualAlert from "./pages/IndividualAlert"
@@ -14,6 +14,7 @@ import Providers from "./pages/Providers"
 import axios from "axios"
 import env_variables from "../../env"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import GroupTab from "./pages/GroupTab"
 
 
 export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,UserCredentials}){
@@ -204,7 +205,8 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
     const[user,setUser]=useState("")
     //fetch Async Storage data
     const [fetchedUsers,setFechedUsers]=useState([])
-    function fetchUser(){
+    const[registeredUser,setRegisteredUser]=useState(null)
+    async function fetchUser(){
         axios.get(env_variables.Access_Api)
         .then(res=>{
             
@@ -214,8 +216,15 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
             console.log(fetchedUsers)
 
         })
+        await AsyncStorage.getItem("user").then(res=>{
+            setRegisteredUser(res)
+           
+        })
+        
     }
     const[selectedUser,setSelectedUser]=useState("")
+    const[selectedAlert,setSelectedAlert]=useState("")
+    const[selectedGroup,setSelectedGroup]=useState(null)
      //useEffect
      useEffect(()=>{
         
@@ -227,7 +236,7 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
         setTimeout(()=>{
            fetchUser()
        },10)
-    },[])
+    },[selectedGroup,selectedAlert])
     return(
         <SafeAreaView>
          <StatusBar barStyle="dark-content" hidden={false} backgroundColor="#1e8ee1" translucent={true} />
@@ -267,9 +276,10 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
                           height:57,
                          }} >
                           <Image source={require('../../assets/name_alatpre.png')} style={{
-                            width:'99.9%',
-                            height:57,
-                            padding:5,
+                            width:"100%",
+                            height:"100%",
+                            flex:1,
+                            resizeMode:"contain",
                           }} />
                          </View>
                          <View style={{
@@ -534,13 +544,11 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
                 }} ><FontAwsome name="sticky-note"  size={20}  />  Reports</Text></TouchableOpacity>
             </View>
         )}
-        {homesegment&&(<View style={{
+        {homesegment&&(<ScrollView style={{
             backgroundColor:"white",
-            height:"100%",
+            height:"80%",
             width:"100%",
-            borderWidth:1,
-            borderColor:"#1e8ee1",
-
+            
         }} >
         {statistics&&(
             <View style={{
@@ -759,7 +767,7 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
             </View>
         )}
 
-        </View>)}
+        </ScrollView>)}
         {alertssegment&&(
             <View style={{
                 height:"80%",
@@ -801,7 +809,7 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
                         borderWidth:1,
                         borderRadius:5,
                         
-                    }} >
+                    }}  >
                        <View style={{
                         padding:4,
                         
@@ -1073,6 +1081,13 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
                         height:70,
                         borderRadius:5,
 
+                    }} onPress={()=>{
+                        setSelectedGroup({
+                            uuid:JSON.stringify(item.groupuuid),
+                            name:item.groupname,
+                            category:item.groupcategory
+                            })
+                       
                     }} >
                         <Image source={require(`../../assets/community.png`)} style={{
                             height:50,
@@ -1095,7 +1110,14 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
                     </TouchableOpacity> 
                 )}
                 />}
-                
+                {selectedGroup !== null ? <View style={{
+                    backgroundColor:"white",
+                    position:"absolute",
+                    height:"100%",
+                    width:"100%"
+                }} >
+                    <GroupTab selectedGroup={selectedGroup} setSelectedGroup={setSelectedGroup} />
+                </View> : "" }
                 
                 {creategroup&&(<TouchableOpacity style={dimensions.screen > 320 ?{
                    
