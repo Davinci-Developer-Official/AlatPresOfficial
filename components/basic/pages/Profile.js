@@ -1,7 +1,12 @@
-import { Image,SafeAreaView,ScrollView,Text,TextInput,TouchableOpacity,View,Switch } from "react-native";
+import { Image,SafeAreaView,ScrollView,Text,TextInput,TouchableOpacity,View,Switch, Alert } from "react-native";
 import FontAwsome from "@expo/vector-icons/FontAwesome"
 import { useState } from "react";
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import env_variables from '../../../env';
+
+
 
 export default function Profile({showProfile,setsideBar}){
     //main form
@@ -36,9 +41,73 @@ export default function Profile({showProfile,setsideBar}){
 
       };
       const[image,setImage]=useState(null)
-    
+      const[Username,setUserName]=useState(null)
+      const[Bio,setBio]=useState(null)
+      const[Surname,setSurname]=useState(null)
+      const[MiddleName,seMiddleName]=useState(null)
+      const[Firstname,seTFirstname]=useState(null)
+      const[Phonenumber,setPhonenumber]=useState(null)
+      const[Email,setEmail]=useState(null)
       //is registers 
       const[isRegistered,setIsRegistered]=useState(false)
+      const[user,setUser]=useState(null)
+      const[clearUserName,setClearUserName]=useState(false)
+      const[number,setNumber]=useState(null)
+      const[clearNumber,setClearNumber]=useState(false)
+      const[pass,setPass]=useState(null)
+      const[clearPass,setClearPass]=useState(false)
+      const[accessArr,setAccessArr]=useState([])
+      const checkUser=async()=>{
+        await AsyncStorage.getItem("user").then(res=>{
+            setUser(res)
+            //Alert.alert(JSON.parse(res));
+          })
+        await AsyncStorage.getItem("number").then(res=>{
+            setNumber(res)
+            //Alert.alert(JSON.parse(res));
+          })
+        await AsyncStorage.getItem("pass").then(res=>{
+            setPass(res)
+            //Alert.alert(JSON.parse(res));
+          })
+       
+      }
+      const[fetchedProfile,setFetchedProfile]=useState([])
+      function fetchProfile (){
+        axios.get(env_variables.PROFILE_API)
+        .then(res=>{
+            const arr = [...res.data]
+            setFetchedProfile(arr)
+            console.log(res.data)
+        })
+        const findArr = fetchedProfile.find(user=>user.username == Username)
+      }
+
+      const[saved,setSaved]=useState(false)
+      function save(){
+        
+        const data = {
+            username:user,
+            bio:Bio,
+            surname:Surname,
+            middlename:MiddleName,
+            firstname:Firstname,
+            email:Email,
+            password:pass
+        }
+        axios.post(env_variables.PROFILE_API,data)
+        .then(res=>{
+            alert(JSON.stringify(res.data))
+            setSaved(true)
+            fetchProfile()
+        })
+      }
+
+      useState(()=>{
+        checkUser();
+      },[checkUser])
+
+      const[secure,setSecure]=useState(true)
     return(
         <SafeAreaView style={{
             position:"absolute",
@@ -50,7 +119,7 @@ export default function Profile({showProfile,setsideBar}){
             <View style={{
                 display:"flex",
                 flexDirection:"row",
-                height:"5%",
+                height:"12%",
                 backgroundColor:"white",
             }} >
                 <TouchableOpacity style={{
@@ -67,20 +136,19 @@ export default function Profile({showProfile,setsideBar}){
                 textAlign:"center", 
                 width:"90%",
                 marginTop:"4%",
-                letterSpacing:2,             
+                letterSpacing:2,  
+                fontSize:18,           
                 }}>Profile information</Text>
             </View>
 
             <ScrollView>
-            <Text>Primary information</Text>
+            
             {primaryForm&&(
                 <View style={{
                     width:"95%",
                    
                     backgroundColor:"white",
                     marginLeft:"2%",
-                    borderWidth:1,
-                    borderColor:"#1e8ee1",
                     
 
 
@@ -122,6 +190,8 @@ export default function Profile({showProfile,setsideBar}){
                         width:"98%",
                         marginLeft:"1%",
                         marginTop:5,
+                    }} value={JSON.parse(user)}  onChangeText={(value)=>{
+                        setUserName(value)
                     }} />
 
                     <TextInput placeholder=" bio" style={{
@@ -130,6 +200,8 @@ export default function Profile({showProfile,setsideBar}){
                         width:"98%",
                         marginLeft:"1%",
                         marginTop:5,
+                    }} onChangeText={(value)=>{
+                        setBio(value)
                     }} />
 
 
@@ -139,6 +211,8 @@ export default function Profile({showProfile,setsideBar}){
                         width:"98%",
                         marginLeft:"1%",
                         marginTop:5,
+                    }} onChangeText={(value)=>{
+                        setSurname(value)
                     }} />
 
                     <TextInput placeholder=" middlename" style={{
@@ -147,6 +221,8 @@ export default function Profile({showProfile,setsideBar}){
                         width:"98%",
                         marginLeft:"1%",
                         marginTop:5,
+                    }} onChangeText={(value)=>{
+                        seMiddleName(value)
                     }} />
 
                     <TextInput placeholder=" firstname" style={{
@@ -155,6 +231,8 @@ export default function Profile({showProfile,setsideBar}){
                         width:"98%",
                         marginLeft:"1%",
                         marginTop:5,
+                    }} onChangeText={(value)=>{
+                        seTFirstname(value)
                     }} />
                     <TextInput placeholder=" phonenumber" style={{
                         borderBottomColor:"black",
@@ -162,6 +240,8 @@ export default function Profile({showProfile,setsideBar}){
                         width:"98%",
                         marginLeft:"1%",
                         marginTop:5,
+                    }} value={JSON.parse(pass)}  onChangeText={(value)=>{
+                        setPhonenumber(value)
                     }} />
 
                     <TextInput placeholder=" email" style={{
@@ -181,6 +261,8 @@ export default function Profile({showProfile,setsideBar}){
                         marginBottom:5,
                         borderRadius:20
                        
+                    }} onPress={()=>{
+                        save()
                     }} >
                         <Text style={{
                             marginTop:5,
@@ -206,6 +288,7 @@ export default function Profile({showProfile,setsideBar}){
                  <View style={{
                     display:"flex",
                     flexDirection:"row",
+                    justifyContent:"space-around"
                     
                  }}>
                  
@@ -215,8 +298,15 @@ export default function Profile({showProfile,setsideBar}){
                         width:"90%",
                         marginLeft:"2%",
                         marginTop:5,
-                    }} />
-                {isRegistered ?  <FontAwsome name="eye" size={20} /> :  <FontAwsome name="eye-slash"  size={20} />}
+                    }} value={JSON.parse(pass)} secureTextEntry={secure} />
+                {isRegistered ?  <FontAwsome name="eye-slash" size={20} onPress={()=>{
+                    setSecure(false)
+                    setIsRegistered(false)
+                }} /> :  <FontAwsome name="eye"  size={20} onPress={()=>{
+                    setSecure(true)
+                    setIsRegistered(true)
+                }} />}
+                
                  </View>
             </View>)}
             </ScrollView>

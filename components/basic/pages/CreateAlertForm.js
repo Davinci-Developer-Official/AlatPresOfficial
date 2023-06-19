@@ -56,8 +56,7 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
     await AsyncStorage.getItem("user").then(res=>{
       setRegisteredUser(res)
       //alert(registeredUser)
-     
-  })
+    })
   }
   async function postData(){
     await fetching()
@@ -352,7 +351,7 @@ export default function CreateAlertForm({renderCreateAlert,setcreatealertpage,re
               setcreatealertpage(false)
               renderalertssegment(true)
               rendersegmentselector(true)
-            },2000)
+            },1)
           }}  >
             <Text>Make Alert</Text>
           </TouchableOpacity>

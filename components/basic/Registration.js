@@ -11,7 +11,9 @@ import{
     Platform,
     Linking,
     FlatList,
-    Switch
+    Switch,
+    Alert,
+    
 }from "react-native"
 import Checkbox from 'expo-checkbox';
 import email from "react-native-email"
@@ -40,13 +42,14 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
     const[termsArea,setTermArea]=useState(true)
     const[notBot,setNotBot]=useState(false)
     const[subsribe,setSubscribe]=useState(false)
-    const[showTerms,setShowTerms]=useState(false)
+    const[showTerms,setShowTerms]=useState(true)
     //proceed
     const [quickAccess,setQuickAccess]=useState(true)
     const[Username,setUsername]=useState(null)
     const[Password,setPassword]=useState(null)
     const[confirmpassword,setconfirmpass]=useState(null)
     const[finalPassword,setFinalPassword]=useState(null)
+    const[phoneNo,setPhoneNo]=useState(null)
     const[storedUsername,setStoredUsername]=useState(null)
     const[storedPassword,setStoredPassword]=useState(null)
     const[usernameExists,setusernameExists]=useState(false)
@@ -61,7 +64,7 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
     const [isValid, setValid] = useState(false);
     const [isValidconf, setValidconf] = useState(false);
     const[matchingPass,setMatchingPass]=useState(true)
-    const[proceedBtn,setProceedBtn]=useState(false)
+    const[proceedBtn,setProceedBtn]=useState(true)
      // Regular expression pattern for password
     const pattern = /^(?=.*[A-Z])[A-Za-z\d]{8,}$/;
     const[fetchedUsers,setFetchedUsers]=useState([]);
@@ -69,7 +72,7 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
     const [secure, setSecure]=useState(true)
     const[showpass,setShowPass]=useState(false)
     const[confirmAgreement,setConfigureAgreement]=useState(false)
-    const[triggerAgreement,setTriggerAgreement]=useState(false)
+    const[triggerAgreement,setTriggerAgreement]=useState(true)
     const[nullName,setNullName]=useState(false)
     const[loginUsername,setLoginUsername]=useState(null)
     const[loginPassword,setLoginPassword]=useState(null)
@@ -115,6 +118,8 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
     }
 
     const[asyncUser,setAsyncUser]=useState(null)
+    const[asyncNumber,setAsyncNumber]=useState(null)
+    const[asyncPass,setAsyncPass]=useState(null)
    
     async function Register(){
         //alert(JSON.stringify(fetchedUsers));
@@ -127,6 +132,8 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
            setUsername(null)
         }else{
             setAsyncUser(Username)
+            setAsyncNumber(phoneNo)
+            setAsyncPass(Password)
         }
                   
         if(Password !== confirmpassword ){
@@ -146,6 +153,7 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
          const data= {
             username:Username,
             password:Password,
+            phonenumber:phoneNo,
          }
            axios.post(env_variables.Access_Api,data)
            .then(res=>{
@@ -154,16 +162,33 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
         })
        // await AsyncStorage.mergeItem("user",JSON.stringify(Username))
         await AsyncStorage.setItem("user",JSON.stringify(asyncUser))
+        await AsyncStorage.setItem("number",JSON.stringify(asyncNumber))
+        await AsyncStorage.setItem("pass",JSON.stringify(asyncPass))
            setUserCredentials(data)
             showRegistrationPage(false)
-            setUpdatedDash(true)
+            setUpdatedDash(true);
             
         }     
     }
 
-    
+    const[loginUser,setLoginUser]=useState(null)
+    const[loginPass,setLoginPass]=useState(null)
+    const[localUser,setLocalUser]=useState(null)
+    const[localPass,setLocalPass]=useState(null)
+    async function fetchAsync(){
+        await AsyncStorage.getItem("user")
+        .then(res=>{setLocalUser(res)})
+        await AsyncStorage.getItem("pass")
+        .then(res=>setLocalPass(res))
 
-    function Login(){
+        
+    }
+    const[click0,setClick0]=useState(false)
+    const[click1,setClick1]=useState(false)
+    const[remakeUser,setRemakeUser]=useState(null)
+    const[remakePass,setRemakePass]=useState(null)
+   async function Login(){
+        asyncStorageCheck()
         //alert(JSON.stringify(fetchedUsers));
         const profArr =[...fetchedUsers]  
         const findArr = profArr.find(user=>user.username == loginUsername)
@@ -172,6 +197,7 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
         if(findArr){
            setWelcomeMsg(true)
            setExistingUser(JSON.stringify(findArr.username));
+           setRemakeUser(findArr.username)
            
         }else{
             setDoesntExist(true)
@@ -180,26 +206,60 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
        if(!findPass){
             setIncorrectPassword(true)
             
+        }else{
+            setLoginUser(loginUsername)
+            setLoginPass(loginPassword)
+
+            
         }
         if(loginUsername !== null && loginPassword !== null && findArr && findPass ){
+            await AsyncStorage.setItem("user",JSON.stringify(loginUsername))
+            await AsyncStorage.setItem("number","")
+            await AsyncStorage.setItem("pass",JSON.stringify(loginPassword))
             console.log(`information is correct`)
             showRegistrationPage(false)
             setUpdatedDash(true)
-        }
-    }
 
+         
+        }
+
+        
+
+        //if(logoutData == null && logoutData1 == null){
+        //    await AsyncStorage.setItem("user",JSON.stringify(loginUsername))
+        //    await AsyncStorage.setItem("number",JSON.stringify(asyncNumber))
+        //    await AsyncStorage.setItem("pass",JSON.stringify(asyncPass))
+        //}
+    }
+    const[logoutData,setLogoutData]=useState(null)
+    const[logoutData1,setLogoutData1]=useState(null)
     function conditions(){
        setTermsOfAgreement(false)
        if(isToa){
         setAgreed(true)
        }
     }
-    function asyncStorageCheck(){
-        AsyncStorage.setItem("user","")
-        AsyncStorage.setItem("password","")
+    const[suggestion,setSuggestion]=useState(false)
+    const[suggestion1,setSuggestion1]=useState(false)
+    const[suggestionUser,setSuggestionUser]=useState(null)
+    const[suggestionPass,setSuggestionPass]=useState(null)
+    async function asyncStorageCheck(){
+      await AsyncStorage.getItem("reg")
+      .then(res=>{
+        setLogoutData(JSON.parse(res))
+        //Alert.alert(logoutData);
+        })  
+      await AsyncStorage.getItem("regpass")
+      .then(res=>{
+        setLogoutData1(JSON.parse(res))
+        //Alert.alert(logoutData1);
+      })      
+
     }
+    const[selected,setSelected]=useState(false)
     useEffect(()=>{    
         fetchUsers()
+        asyncStorageCheck()
         if(agreed){
             setProceedBtn(true)
             //asyncStorageCheck()
@@ -270,32 +330,7 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
                     textAlign:'center',
                     color:'white',
             }} >
-            <View>
-                
-                <View style={{
-                    width:100,
-                    height:50,
-                    display:"flex",
-                    flexDirection:"row",
-                }}>
-                <Text style={{
-                    paddingTop:15,
-                }}>Login</Text>
-                <Switch style={{
-                    paddingTop:15,
-                }}
-                trackColor={{false:'#767577', true:"#81b0ff"}} 
-                onValueChange={(value)=>{
-                    setIsEnabled(value)
-                    checkStatus()
-                }}
-                value={isEnabled}
-                thumbColor={isEnabled?"#f5ddb":"#f4f3f7"}
-                />
-                <Text style={{
-                    paddingTop:15,
-                }}>register</Text>
-                </View>
+            <View>            
                
             </View>
                 {registering  &&(<View>
@@ -311,6 +346,16 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
                     onChangeText={value=>{
                         setUsername(value)
                         setNullName(false)
+                    }} maxLength={10} />
+                    <TextInput placeholder="your phonenumber"  style={{
+                    borderBottomColor:"#1e8ee1",
+                    borderBottomWidth:1,
+                    marginTop:30
+                    }} 
+                    keyboardType="phone-pad"
+                    value={phoneNo}
+                    onChangeText={value=>{
+                        setPhoneNo(value)
                     }} />
                 
                 <View style={{
@@ -344,13 +389,9 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
                 }} secureTextEntry={secure}
                  onChangeText={value=>{
                     setPassword(value)
-                    setValid(pattern.test(value));
+                    //setValid(pattern.test(value));
                     }} />
-                 {!isValid && (
-                    <Text style={{ color: 'green' }}>
-                        Password must have 8 characters or more, include at least one capital letter.
-                    </Text>
-                  )}
+                 
                 <TextInput placeholder="confirm password"  style={{
                     borderBottomColor:"#1e8ee1",
                     borderBottomWidth:1,
@@ -359,18 +400,14 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
                 }} secureTextEntry={secure}
                  onChangeText={value=>{
                     setconfirmpass(value)
-                    setValidconf(pattern.test(value));
-                    if(isValidconf){
-                       setTriggerAgreement(true)
-                       setShowTerms(true)
-                    }
+                    //setValidconf(pattern.test(value));
+                    //if(isValidconf){
+                    //   setTriggerAgreement(true)
+                    //   setShowTerms(true)
+                    //}
                     
                     }} />
-                 {!isValidconf && (
-                     <Text style={{ color: 'green' }}>
-                        Password must have 8 characters or more, include at least one capital letter.
-                     </Text>
-                   )}
+                 
                  {!matchingPass?<Text style={{ color: 'red',marginTop:10, }} >Passwords do not match</Text> :""}
                 
                 {triggerAgreement&&(<TouchableOpacity style={{
@@ -403,7 +440,7 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
             </View>)}
                 
                 { proceedBtn  &&(<TouchableOpacity  style={{
-                    marginLeft:"80%",
+                    marginLeft:"75%",
                     backgroundColor:"#1e8ee1",
                     marginTop:10,
                     marginBottom:5,
@@ -417,20 +454,116 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
                     <Text style={{
                         paddingTop:5,
                         paddingBottom:5,
-                        paddingLeft:10,
+                        textAlign:'center'
                     }} >Sign Up</Text>
                 </TouchableOpacity>)}
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row"
+                }}>
+                    <Text>Already have an account ?</Text><TouchableOpacity onPress={()=>{
+                    setIsEnabled(false)
+                    setLogin(true)
+                    setRegistering(false)
+                }} >
+                    <Text style={{
+                        color:"#1e8ee1"
+                    }}> Login</Text>
+                    </TouchableOpacity>
+                </View>
                 </View>)}
-                {login&&(<View>
-                    {doesntExist&&(<Text>User doesn't exist place sign up to create user or use correct username</Text>)}
-                    <TextInput placeholder="username"  style={{
+            {login&&(<View>
+                    <Text style={{
+                    textAlign:"center",
+                    color:"#1e8ee1"
+                }}>Login to your account</Text>
+                <View style={{
+                    display:"flex",
+                    flexDirection:"column",
+                    
+                }}>
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row",
+                    marginTop:5,
+                   
+                }} >
+                    <Checkbox 
+                     value={selected}
+                     onValueChange={()=>{
+                        setSelected(true)
+                        if(selected== true){
+                        setSuggestion(true)
+                        setSuggestion1(true)
+                        }
+                        
+                    }} style={selected ? {
+                        backgroundColor:"#1e8ee1"
+                    }:{
+                        backgroundColor:"white"
+                    } } />
+                    <Text style={{
+                        marginLeft:10,
+                    }} >Remember Me</Text>
+                </View>
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row",
+                    justifyContent:"space-between"
+                }} >
+                <TextInput placeholder="username"  style={{
                     borderBottomColor:"#1e8ee1",
                     borderBottomWidth:1,
-                    
+                    marginTop:20,
+                    width:"90%"
                 }} onChangeText={value=>{
                         setLoginUsername(value)
                         setNullName(false)
-                    }} />
+                        
+                        
+                    }} value={ suggestionUser == null ? loginUsername : JSON.parse(suggestionUser)} />
+                <TouchableOpacity style={{
+                    width:"10%",
+                    paddingTop:25,
+                }} onPress={()=>{
+                    if(suggestionUser == null){
+                        setLoginUsername(null)
+                    }else{
+                        setSuggestionUser(null)
+                    }
+                   
+                }} >
+                    <Text>
+                        clear
+                    </Text>
+                </TouchableOpacity>
+                </View>
+               {suggestion && <TouchableOpacity style={{
+                    width:"90%",
+                    backgroundColor:"#A7EcEE",
+                    height:30,
+                    marginRight:"10%",
+                    marginTop:5,
+                }} onPress={()=>{
+                    setSuggestionUser(logoutData)
+                    setClick0(true)
+                    setLoginUsername(null)
+                    if(click0){
+                        setLoginUsername(JSON.parse(suggestionPass))
+                        alert(loginUsername)
+                        }
+                }} >
+                  <TextInput value={JSON.parse(logoutData)} editable={false} style={{
+                    color:"black"
+                  }} />
+                   
+                </TouchableOpacity>}
+                </View>
+                    {doesntExist&&(<Text style={{
+                        color:"#1e8ee1"
+                    }} >User doesn't exist place sign up to create user or use correct username</Text>)}
+                
+                
                 <View style={{
                     width:100,
                     height:50,
@@ -455,16 +588,69 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
                 }}>show password</Text>
                 </View>
                 {incorrectPassword&&(<Text>incorrect password</Text>)}
+                <View style={{
+                    display:"flex",
+                    flexDirection:"column",
+                    
+                }}>
+                
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row",
+                    justifyContent:"space-between"
+                }} >
                 <TextInput placeholder="password"  style={{
                     borderBottomColor:"#1e8ee1",
                     borderBottomWidth:1,
-                    marginTop:5,
-                    
-                }} secureTextEntry={secure}
+                    marginTop:20,
+                    width:"90%"
+                }}  secureTextEntry={secure} 
                  onChangeText={value=>{
                     setLoginPassword(value)
                     setValid(pattern.test(value));
-                    }} />
+                        
+                        
+                        
+                    }} value={ suggestionPass == null ? loginPassword : JSON.parse(suggestionPass)} />
+                <TouchableOpacity style={{
+                    width:"10%",
+                    paddingTop:25,
+                }} onPress={()=>{
+                    if(suggestionPass == null){
+                        setLoginPassword(null)
+                    }else{
+                        setSuggestionPass(null)
+                    }
+                   
+                }} >
+                    <Text>
+                        clear
+                    </Text>
+                </TouchableOpacity>
+                </View>
+               {suggestion1 && <TouchableOpacity style={{
+                    width:"90%",
+                    backgroundColor:"#A7EcEE",
+                    height:30,
+                    marginRight:"10%",
+                    marginTop:5,
+                }} onPress={()=>{
+                    setSuggestionPass(logoutData1)
+                    setClick1(true)
+                    setLoginPassword(null)
+                    if(click1){
+                        setLoginPassword(JSON.parse(suggestionPass))
+                        alert(loginPassword)
+                        }
+                  
+                }} >
+                  <TextInput value={JSON.parse(logoutData1)} editable={false} style={{
+                    color:"black"
+                  }} secureTextEntry={secure}  />
+                   
+                </TouchableOpacity>}
+                </View>
+               
                 {welcomeMsg&&(<Text>welcome {existingUser}</Text>)}
                 <TouchableOpacity style={{
                     marginLeft:"80%",
@@ -483,7 +669,22 @@ export default function RegistrationOptions({userRegistered,setUserCredentials,s
                         paddingLeft:10,
                     }} >Sign In</Text>
                 </TouchableOpacity>
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row"
+                }}>
+                    <Text>Create a new account ?</Text><TouchableOpacity onPress={()=>{
+                    setIsEnabled(true)
+                    setLogin(false)
+                    setRegistering(true)
+                }} >
+                    <Text style={{
+                        color:"#1e8ee1"
+                    }}> Register</Text>
+                    </TouchableOpacity>
+                </View>
                 </View>)}
+                
             </View>
         )}
 

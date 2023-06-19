@@ -12,9 +12,10 @@ export default function UpdatedSidebar({setsideBar,setShowBars,setUpdatedDash}){
         height:"100%",
         width:'95%',
         backgroundColor:'white',
-        borderStyle:'solid',
-        borderColor:'#1e8ee1',
-        borderWidth:1.5,
+        borderRightStyle:'solid',
+        borderRightColor:'#1e8ee1',
+        borderRightWidth:1.5,
+        paddingTop:5
         }} >
             <Text>..</Text>
         <View style={{

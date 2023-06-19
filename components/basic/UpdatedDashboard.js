@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Dimensions,SafeAreaView,View,TouchableOpacity,Text,Image,Switch,StatusBar, ScrollView, FlatList, TextInput, RefreshControl, ActivityIndicator, Alert } from "react-native"
+import { Dimensions,SafeAreaView,View,TouchableOpacity,Text,Image,Switch,StatusBar, ScrollView, FlatList, TextInput, RefreshControl, ActivityIndicator, Alert, Button } from "react-native"
 import FontAwsome from '@expo/vector-icons/FontAwesome'
 import CreateAlertForm from "./pages/CreateAlertForm"
 import IndividualAlert from "./pages/IndividualAlert"
@@ -15,6 +15,7 @@ import axios from "axios"
 import env_variables from "../../env"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GroupTab from "./pages/GroupTab"
+import moment from "moment"
 
 
 export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,UserCredentials}){
@@ -204,8 +205,9 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
 
     const[user,setUser]=useState("")
     //fetch Async Storage data
-    const [fetchedUsers,setFechedUsers]=useState([])
-    const[registeredUser,setRegisteredUser]=useState(null)
+    const [fetchedUsers,setFechedUsers]=useState([]);
+    const[registeredUser,setRegisteredUser]=useState(null);
+    const[regPass,setRegPass]=useState(null)
     async function fetchUser(){
         axios.get(env_variables.Access_Api)
         .then(res=>{
@@ -220,14 +222,35 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
             setRegisteredUser(res)
            
         })
+        await AsyncStorage.getItem("pass").then(res=>{
+            setRegPass(res)
+        })
         
     }
     const[selectedUser,setSelectedUser]=useState("")
     const[selectedAlert,setSelectedAlert]=useState("")
     const[selectedGroup,setSelectedGroup]=useState(null)
+
+    async function logOut(){
+        await AsyncStorage.setItem("reg",JSON.stringify(registeredUser))
+        await AsyncStorage.setItem("regpass",JSON.stringify(regPass))
+        showRegistrationPage(true);
+        setUpdatedDash(false);
+    }
+
+
+  const [accurateTime,setAccurateTime]=useState([])
+  //const[user,setUser]=useState("Joe")
+    function timing(){    
+    const newTime = moment(new Date()).format("YYYY-MM-DD hh:mm A");
+    setAccurateTime(newTime)
+    
+  }
+
      //useEffect
      useEffect(()=>{
-        
+        //Alert.alert(JSON.stringify(regPass))
+        //Alert.alert(registeredUser)
         const dimentionTracking = Dimensions.addEventListener('change',({window,screen})=>{
             setDimensions({window,screen})
         })
@@ -236,6 +259,7 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
         setTimeout(()=>{
            fetchUser()
        },10)
+       timing()
     },[selectedGroup,selectedAlert])
     return(
         <SafeAreaView>
@@ -336,55 +360,151 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
         {overView&&(
             <View style={{
                 marginBottom:5,
-                backgroundColor:'#1e8ee1', 
+                backgroundColor:'white', 
                 borderWidth:1.5,
-                borderColor:"white"               
+                borderColor:"#1e8ee1",
+                width:"99.5%",
+                marginLeft:".25%"              
                 
             }} >
                
                <View style={{
                 display:"flex",
                 flexDirection:"row",
-                justifyContent:"space-evenly"
+                justifyContent:"space-between",
+                backgroundColor:"white",
+                borderWidth:1,
                }} >
                 {drkMode&&(
                     <View style={{
                         display:"flex",
                         flexDirection:"row",
+                      
+                        
+                        height:50,
+                        backgroundColor:"#1e8ee1",
+                        width:"50%",
+                        borderTopRightRadius:10,
+                        borderBottomRightRadius:10,
+                        borderRightWidth:2,
+                        borderColor:"#1e8ee1",
+                        justifyContent:"space-between"
+                        
                        
-                        marginTop:5,
                         
-                        
-                        width:"40%",
                        }} >
-                        <Switch value={enableDark} onValueChange={toogleSwitchDrk} style={{
-                           
+                        <FontAwsome name="user-circle" size={30} style={{
+                            paddingTop:12,
+                            paddingLeft:5,
+                            color:"white",
                         }} />
-                        <Text style={{
-                            marginTop:14,
-                            marginLeft:10,
+                        
+                        {registeredUser === null ? <Text style={{ marginTop:15,
+                            marginRight:20,
                             fontSize:15,
-                        }} >Turn on Dark  mode</Text>
+                            textAlign:"center",
+                            color:"black",
+                            paddingTop:3,
+                            letterSpacing:1,
+                            
+                            }} >No active User</Text> : <Text style={{
+                            marginTop:15,
+                            marginLeft:15,
+                            fontSize:15,
+                            textAlign:"center",
+                            color:"white"
+                            
+
+                        }} >{JSON.parse(registeredUser)}</Text> }
+                        {registeredUser !== null && <TouchableOpacity style={{
+                            width:"15%",
+                            backgroundColor:"#1e8ee1",
+                            borderTopRightRadius:10,
+                        borderBottomRightRadius:10,
+                        borderRightWidth:2,
+                        borderColor:"#1e8ee1",
+                        }} >
+                        <FontAwsome name="pencil"  size={30} style={{
+                            paddingTop:10,
+                           color:"white"
+                        }} />
+                        </TouchableOpacity>}
                        </View>
                 )}
-                {SwitchLocation&&(<View style={{
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row",
+                    width:"50%",
+                    backgroundColor:"white",
+                    justifyContent:"space-evenly"
+                }} >
+                <View style={{
+                    width:"40%"
+                }} >
+                    <Image source={require("../../assets/alatpres_logo.png")} style={{
+                        width:"100%",
+                            height:"100%",
+                            flex:1,
+                            resizeMode:"contain",
+                    }} />
+                </View>
+                {SwitchLocation&&(
+               <TouchableOpacity style={{
+                width:"15%",
+                backgroundColor:"white",
+
+
+               }}>
+               <FontAwsome name="map-marker" size={30} style={{
+                paddingTop:10,
+               paddingLeft:5,
+               paddingRight:5,
+               }} />
+               </TouchableOpacity>
+                
+               )}
+               {registeredUser == null ?  <TouchableOpacity style={{
+                
+                backgroundColor:"white",
                 display:"flex",
-                flexDirection:"row",
-                marginLeft:"10%",
-                marginTop:5,
+                flexDirection:"row"
+
+
+               }}  
+               onPress={()=>{
+                                showRegistrationPage(true);
+                                setUpdatedDash(false);               
+                            }} >
+               <FontAwsome name="user-plus" size={30} style={{
+               paddingTop:10,
+               paddingLeft:5,
+               paddingRight:5,
+               }} />
+               <Text style={{
+                 paddingTop:17,
+                 paddingRight:5
+               }}>Join</Text>
+               </TouchableOpacity> : <TouchableOpacity style={{
                 
+                backgroundColor:"white",
+                display:"flex",
+                flexDirection:"row"
+
+
+               }}  onPress={()=>{
+                logOut()
                 
-                width:"40%",
-               }} >
-                <Switch value={enableLoc} onValueChange={toogleSwitchLLoc} style={{
-                   
-                }} />
-                <Text style={{
-                    marginTop:14,
-                    marginLeft:10,
-                    fontSize:15,
-                }} >Enable Location</Text>
-               </View>)}
+            }} >
+               <FontAwsome name="arrow-circle-o-right" size={30} style={{
+               paddingTop:10,
+               paddingLeft:5,
+               paddingRight:5,
+               }} />
+               <Text style={{
+                 paddingTop:15,
+                 paddingRight:5
+               }}>log out</Text>
+               </TouchableOpacity> }
                </View>
 
                <View style={{
@@ -396,25 +516,20 @@ export default function UpdatedDashboard({showRegistrationPage,setUpdatedDash,Us
                 width:"100%",
                 marginBottom:10,
                }}>
-               <Text style={{
-                marginTop:7,
-                color:"white",
-               }} > Access your account or create a new account </Text>
-               <TouchableOpacity style={{
-                backgroundColor:"white",
-                borderRadius:5,
-               }} onPress={()=>{
-                showRegistrationPage(true);
-                setUpdatedDash(false);
-                
-            }} ><Text style={{
-                marginTop:5,
-                marginLeft:5,
-                marginRight:5,
-                marginBottom:5,
-            }} >here</Text></TouchableOpacity>
+                </View>
                </View>
-              
+
+               <View style={{
+                display:"flex",
+                flexDirection:"row",
+               
+
+               }} >
+                
+                <Text style={{
+                    marginRight:10,
+                }}>  {accurateTime}</Text>
+               </View>
 
             </View>
         )}
